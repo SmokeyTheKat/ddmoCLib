@@ -2,10 +2,9 @@
 #include <ddcPrint.h>
 #include "ddcString.h"
 
+
 int main(void)
 {
-	ddString ds = dsmul("#    ", 10);
-	dsPrintL(ds);
-	raze_ddString(&ds);
+	fltPrint((float)1/3);
 	return 0;
 }

@@ -8,9 +8,8 @@
 #define __TEST__ "32"
 #endif
 
-int main(void)
+int main(ddsize agsc, char** ags)
 {
-	ddString ds = nddString("omg");
-	dsPrintL(ds);
+	chPrintC(5, "yo", " ", "bro", "!", "OMG");
 	return 0;
 }
