@@ -66,10 +66,17 @@ void fltPrint(float _v)
 	dsPrint(_ds);
 	raze_ddString(&_ds);
 }
+
+#ifndef dblPrint(v)
+	#define dblPrint(v) fltPrint((float)v)
+	#endif
+
+/*
 void dblPrint(double _v)
 {
 	fltPrint((float)_v);
 }
+*/
 
 
 
