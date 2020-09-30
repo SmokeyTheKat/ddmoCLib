@@ -14,9 +14,12 @@
 #ifndef dsPrintL
 	#define dsPrintL dsPrintLine
 	#endif
+#ifndef ddPrint
+	#define ddPrint(t,v)
+	#endif
 
 
-void __ddPrint(const void* _v, const ddsize _len);
+static void __ddPrint(const void* _v, const ddsize _len);
 void chPrint(const char* _ch);
 void chPrintLine(const char* _ch);
 void cPrint(const char _c);
@@ -24,7 +27,7 @@ void dsPrint(const ddString _ds);
 void dsPrintLine(const ddString _ds);
 
 
-void __ddPrint(const void* _v, const ddsize _len)
+static void __ddPrint(const void* _v, const ddsize _len)
 {
 #if __x86_64__
 	__asm__		(".intel_syntax;"
@@ -67,7 +70,7 @@ void fltPrint(float _v)
 	raze_ddString(&_ds);
 }
 
-#ifndef dblPrint(v)
+#ifndef dblPrint
 	#define dblPrint(v) fltPrint((float)v)
 	#endif
 

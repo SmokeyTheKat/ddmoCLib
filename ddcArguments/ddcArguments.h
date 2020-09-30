@@ -11,7 +11,7 @@ struct ddArguments
 	char** ags;
 };
 
-ddArguments readArguments(char** _ags, ddsize _agsc)
+ddArguments make_ddArguments(char** _ags, ddsize _agsc)
 {
 	ddArguments _o;
 	_o.ags = _ags;

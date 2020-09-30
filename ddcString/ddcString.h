@@ -47,6 +47,7 @@ struct ddString
 	char* cstr;
 	ddsize length;
 	ddsize capacity;
+	Ostatus status;
 };
 
 
@@ -286,6 +287,7 @@ ddString remake_ddString(ddString* _ds, const char* _c)
 {
 	raze_ddString(_ds);
 	*_ds = make_ddString(_c);
+	_ds->status = active;
 }
 ddString make_ddString(const char* _c)
 {
@@ -296,6 +298,8 @@ ddString make_ddString(const char* _c)
 	_o.length = _len;
 	_o.capacity = _len + __byinc;
 
+	_o.status = active;
+
 	_o.cstr = make(char, _o.capacity);
 	chcpy(_o.cstr, _c, _o.length);
 
@@ -304,6 +308,7 @@ ddString make_ddString(const char* _c)
 void raze_ddString(ddString* ds)
 {
 	raze(ds->cstr);
+	ds->status = deleted;
 }
 
 
