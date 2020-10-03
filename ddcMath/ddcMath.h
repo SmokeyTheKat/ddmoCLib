@@ -2,6 +2,7 @@
 #define __ddcMath__
 
 #include <ddcDef.h>
+#include <math.h>
 
 
 
@@ -19,6 +20,25 @@ float ddsqrt(float n)
 	}
 	return _s;
 } 
+
+
+ddsize factt(ddsize n)
+{
+	if (n == 0 || n == 1)
+		return 1;
+	else
+		return n * factt(n-1);
+}
+
+float sq2(float n)
+{
+	float o = 0;
+	for (ddsize i = 0; i < 50; i++)
+	{
+		o += (pow((n-1),i))/(factt(i));
+	}
+	return o;
+}
 
 int ddabs(int _n)
 {

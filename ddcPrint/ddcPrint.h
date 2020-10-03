@@ -19,7 +19,7 @@
 	#endif
 
 
-static void __ddPrint(const void* _v, const ddsize _len);
+void __ddPrint(const void* _v, const ddsize _len);
 void chPrint(const char* _ch);
 void chPrintLine(const char* _ch);
 void cPrint(const char _c);
@@ -27,7 +27,7 @@ void dsPrint(const ddString _ds);
 void dsPrintLine(const ddString _ds);
 
 
-static void __ddPrint(const void* _v, const ddsize _len)
+void __ddPrint(const void* _v, const ddsize _len)
 {
 #if __x86_64__
 	__asm__		(".intel_syntax;"

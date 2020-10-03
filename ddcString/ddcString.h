@@ -97,7 +97,7 @@ bool chcmp(const char* _d, const char* _s)
 void dscpy(ddString* _d, const ddString* _s)
 {
 	if (_d->capacity < _s->length)
-		dsres(_d, _s->length + __byinc);
+		dsres(_d, _s->length + __BYINC);
 	chcpy(_d->cstr, _s->cstr, _s->length);
 }
 void dsres(ddString* _d, ddsize _nl)
@@ -138,14 +138,14 @@ void dsPushChBack(ddString* _d, const char* _ch)
 	ddsize _clen;
 	chlen(_ch, &_clen);
 	if (_d->capacity < _d->length + _clen)
-		dsres(_d, _d->length + _clen + __byinc);
+		dsres(_d, _d->length + _clen + __BYINC);
 	chcpyos(_d->cstr, _ch, _d->length, 0, _clen);
 	_d->length += _clen;
 }
 void dsPushCBack(ddString* _d, const char _c)
 {
 	if (_d->capacity < _d->length + 1)
-		dsres(_d, _d->length + 1 + __byinc);
+		dsres(_d, _d->length + 1 + __BYINC);
 	_d->cstr[_d->length] = _c;
 	_d->length += 1;
 }
@@ -156,7 +156,7 @@ void dsPushChFront(ddString* _d, const char* _ch)
 	ddsize _clen;
 	chlen(_ch, &_clen);
 	if (_d->capacity < _d->length + _clen)
-		dsres(_d, _d->length + _clen + __byinc);
+		dsres(_d, _d->length + _clen + __BYINC);
 	char* _t = make(char, _d->length + _clen);
 	chcpy(_t, _ch, _clen);
 	chcpyos(_t, _d->cstr, _clen, 0, _d->length);
@@ -167,7 +167,7 @@ void dsPushChFront(ddString* _d, const char* _ch)
 void dsPushCFront(ddString* _d, const char _c)
 {
 	if (_d->capacity < _d->length + 1)
-		dsres(_d, _d->length + 1 + __byinc);
+		dsres(_d, _d->length + 1 + __BYINC);
 	char* _t = make(char, _d->length + 1);
 	_t[0] = _c;
 	chcpyos(_t, _d->cstr, 1, 0, _d->length);
@@ -272,12 +272,12 @@ ddString dsmul(const char* _c, ddsize _n)
 {
 	ddsize _len;
 	chlen(_c, &_len);
-	char* _t = make(char, (_len*_n) + __byinc);
+	char* _t = make(char, (_len*_n) + __BYINC);
 	for (ddsize i = 0; i < _n*_len; i += _len)
 		for (ddsize j = 0; j < _len; j++)
 			_t[i+j] = _c[j];
 	ddString* out = make(ddString, 1);
-	out->capacity = (_len*_n) + __byinc;
+	out->capacity = (_len*_n) + __BYINC;
 	out->length = _len*_n;
 	out->cstr = _t;
 	return *out;
@@ -296,7 +296,7 @@ ddString make_ddString(const char* _c)
 	chlen(_c, &_len);
 
 	_o.length = _len;
-	_o.capacity = _len + __byinc;
+	_o.capacity = _len + __BYINC;
 
 	_o.status = active;
 

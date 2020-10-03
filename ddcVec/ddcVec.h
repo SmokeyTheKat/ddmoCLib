@@ -2,6 +2,7 @@
 #define __ddVec__
 
 #include <math.h>
+#include <ddcDef.h>
 
 typedef struct ddVec2 ddVec2;
 typedef struct ddVec3 ddVec3;
@@ -10,6 +11,8 @@ typedef struct ddVec3 ddVec3;
 
 ddVec2 make_ddVec2(float _x, float _y);
 
+void v2set(ddVec2* _d, const ddVec2 _s);
+bool v2cmp(const ddVec2 _d, const ddVec2 _s);
 void v2add(ddVec2* _d, const ddVec2 _s);
 void v2sub(ddVec2* _d, const ddVec2 _s);
 void v2mul(ddVec2* _d, const ddVec2 _s);
@@ -51,6 +54,15 @@ struct ddVec3
 
 
 
+bool v2cmp(const ddVec2 _d, const ddVec2 _s)
+{
+	return ((_d.x == _s.x) && (_d.y == _s.y));
+}
+void v2set(ddVec2* _d, const ddVec2 _s)
+{
+	_d->x = _s.x;
+	_d->y = _s.y;
+}
 ddVec2 make_ddVec2(float _x, float _y)
 {
 	ddVec2 _o;

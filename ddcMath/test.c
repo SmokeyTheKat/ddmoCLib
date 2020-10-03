@@ -4,9 +4,6 @@
 
 int main(void)
 {
-	fltPrint(ddsqrt(23.5));
-	chPrintL("");
-	intPrint(ddabs(63));
-	chPrintL("");
+	fltPrint(sq2(8));
 	return 0;
 }
