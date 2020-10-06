@@ -2,14 +2,23 @@
 #define __ddcMath__
 
 #include <ddcDef.h>
+#include <ddcMap.h>
 #include <math.h>
 
+double abs(double n);
+ddsize ddfact(ddsize n);
+double ddsqrt(double n);
+double ddsin(double n);
 
+double ddsin(double n)
+{
+	return n - ((n
+}
 
-float ddsqrt(float n)
+double ddsqrt(double n)
 { 
-	float _t;
-	float _s;
+	double _t;
+	double _s;
 
 	_s = n / 2;
 
@@ -30,17 +39,7 @@ ddsize factt(ddsize n)
 		return n * factt(n-1);
 }
 
-float sq2(float n)
-{
-	float o = 0;
-	for (ddsize i = 0; i < 50; i++)
-	{
-		o += (pow((n-1),i))/(factt(i));
-	}
-	return o;
-}
-
-int ddabs(int _n)
+double ddabs(double _n)
 {
 	return (_n < 0) ? _n * -1 : _n;
 }

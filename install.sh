@@ -9,4 +9,6 @@ cp ./ddcTime/ddcTime.h /usr/include/
 cp ./ddcHolder/ddcHolder.h /usr/include/
 cp ./ddcVec/ddcVec.h /usr/include/
 cp ./ddcMath/ddcMath.h /usr/include/
+cp ./ddcMap/ddcMap.h /usr/include/
+cp ./ddcCharSets/ddcCharSets.h /usr/include/
 cp ./ddcScreen/ddcCursor/ddcCursor.h /usr/include/

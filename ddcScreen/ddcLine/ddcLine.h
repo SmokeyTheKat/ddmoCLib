@@ -6,6 +6,9 @@
 #include <ddcMath.h>
 #include <ddcVec.h>
 #include <ddcPrint.h>
+#include <ddcCharSets.h>
+
+#include <time.h>
 
 typedef struct ddLine ddLine;
 
@@ -32,6 +35,13 @@ void draw_linePoints(ddVec2 p1, ddVec2 p2);
 void draw_line(ddLine dl);
 
 
+float get_dist(ddVec2 a, ddVec2 b)
+{
+	float o = b.y - a.y;
+	float p = b.x - a.x;
+	return (float)(sqrt(pow(o,2)+pow(p,2)));
+}
+
 
 void draw_linePoints(ddVec2 p1, ddVec2 p2)
 {
@@ -39,46 +49,85 @@ void draw_linePoints(ddVec2 p1, ddVec2 p2)
 }
 void draw_line(ddLine dl)
 {
-/*
-	if (dl.p1.x > dl.p2.x)
-	{
-		ddVec2 t = dl.p1;
-		dl.p1 = dl.p2;
-		dl.p2 = t;
-	}
-*/
 
-/*
-	float p = (int)dl.p1.x;
-	float inc = 0.1;
-	cursor_moveTo(p, (int)dl.p1.y);
-	for (p; p < (int)dl.p2.x; p += inc)
-	{
-		int mt = (int)((p*dl.slope)+dl.constant);
-		cursor_moveTo(p, mt);
-		cursor_chWrite("#");
-	}
-*/
+
 	ddVec2 p = make_ddVec2(dl.p1.x, dl.p1.y);
-	while(!v2cmp(p, dl.p2))
+
+
+
+	/*
+	 * start you code
+	 * point1 = "dl.p1"
+	 * point1 = "dl.p1"
+	 * point2 = "dl.p2"
+	 * to get y or x do "dl.p1.x" or "dl.p2.y"
+	 * p is the cursor or the current position
+	 * p is initizalized as the first point (dl.p1.x, dl.p2.y)
+	 *
+	 * to draw:
+	 * cursor_moveTo(p.x, p.y);
+	 * cursor_chWrite(cset_block);
+	 *
+	 *
+	 * to test, exit and type:
+	 * gcc test.c -o test
+	 * ./test
+	 *
+	 *
+	 *
+	 *
+	 */
+
+/*
+	//int dx = dl.p2.x-dl.p1.x/ddabs(dl.p2.x-dl.p1.x);
+	//int dy = dl.p2.y-dl.p1.y/ddabs(dl.p2.y-dl.p1.y);
+	int dx = (dl.p1.x <= dl.p2.x) ? 1 : -1;
+	int dy = (dl.p1.y <= dl.p2.y) ? 1 : -1;
+	int brx;
+	int bry;
+	if (dx == 1)
+		brx = dl.p2.x;
+	else
+		brx = dl.p1.x;
+	if (dy == 1)
+		bry = dl.p2.y;
+	else
+		bry = dl.p1.y;
+	int cx = 1;
+	int cy = 1;
+	while(p.x < dl.p2.x || p.y < dl.p2.y)
+	//while(!v2cmp(p, dl.p2))
 	{
-		int dx = (dl.p2.x - p.x);
-		int mdx;
-		if (dx != 0)
-			mdx = (dx / ddabs(dx));
-
-		int dy = (dl.p2.y - p.y);
-		int mdy;
-		if (dy != 0)
-			mdy = (dy / ddabs(dy));
-		if ((ddabs(dx) / dl.p2.x) > (ddabs(dy) / dl.p2.y))
-			p.x += mdx;
-		else
-			p.y += mdy;
-		cursor_moveTo(p.x, p.y);
-		cursor_chWrite("#");
+		float rx = cx/brx;
+		float ry = cy/bry;
+		if (rx < ry)
+		{
+			cx++;
+			p.x += dx;
+		}
+		else if (ry < rx)
+		{
+			cy++;
+			p.y += dy;
+		}
+		else if (rx == ry)
+		{
+			if (1/brx < 1/bry)
+			{
+				cx++;
+				p.x += dx;
+			}
+			else
+			{
+				cy++;
+				p.y += dy;
+			}
+		}
+		intPrint(cx);
+		//cursor_moveTo(p.x, p.y);
+		//cursor_chWrite(cset_block);
 	}
-
+*/
 
 }
 

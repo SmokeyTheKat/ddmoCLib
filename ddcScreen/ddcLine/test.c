@@ -18,30 +18,8 @@ MAINF__
 	cursor_clear();
 
 
-	ddVec2 p1 = make_ddVec2(3,  3);
-	ddVec2 p2 = make_ddVec2(30, 8);
-	ddVec2 p3 = make_ddVec2(30, 20);
-	ddVec2 p4 = make_ddVec2(3,  20);
 
-	for(;;)
-	{
-		p1.x++;
-		p2.x++;
-		p3.x++;
-		p4.x++;
-
-		draw_linePoints(p1, p2);
-		draw_linePoints(p2, p3);
-		draw_linePoints(p3, p4);
-		draw_linePoints(p4, p1);
-		sleep(1);
-		cursor_clear();
-	}
-
-
-
-	//draw_line(make_ddLine(make_ddVec2(0, 0), make_ddVec2(90, 30)));
-
+	draw_line(make_ddLine(make_ddVec2(2, 8), make_ddVec2(9, 2)));
 
 	cursor_moveTo(0, 40);
 

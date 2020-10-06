@@ -264,6 +264,10 @@ ddString floatTds(float _f)
 			n1 /= 10;
 		}
 	}
+	if (_o.cstr[0] == '0' && _o.cstr[_o.length-1] == '.')
+	{
+		dsPushCFront(&_o, '1');
+	}
 	return _o;
 }
 
