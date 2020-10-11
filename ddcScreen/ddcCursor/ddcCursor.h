@@ -5,13 +5,16 @@
 #include <ddcPrint.h>
 #include <ddcMath.h>
 #include <ddcString.h>
+#include <ddcColors.h>
 
 #define __CURSOR_STACK_LENGTH 10
 
-const ddsize consoleWidth = 148;
+const ddsize consoleWidth = 170;
 const ddsize consoleHeight = 47;
 
 ddVec2 cursorPosition;
+ddColor cursorBGColor;
+
 static ddVec2 __v2empty;
 static ddVec2 __cursorPositionStack[__CURSOR_STACK_LENGTH];
 
@@ -34,6 +37,10 @@ void cursor_dsWrite(const ddString ds);
 void cursor_chWriteLine(const char* ch);
 void cursor_dsWriteLine(const ddString ds);
 void cursor_clear(void);
+void cursor_setFColor(ddColor dc);
+void cursor_setFColorRGB(int r, int g, int b);
+void cursor_setBColor(ddColor dc);
+void cursor_setBColorRGB(int r, int g, int b);
 
 #define cursor_dsWriteL cursor_dsWriteLine
 #define cursor_chWriteL cursor_chWriteLine
@@ -43,6 +50,7 @@ void cursor_clear(void);
 void init_cursor(void)
 {
 	__v2empty = make_ddVec2(-1, -1);
+	cursorBGColor = make_ddColor(0, 0, 0);
 	cursorPosition = make_ddVec2(0, 0);
 	for (int i = 0; i < __CURSOR_STACK_LENGTH; i++)
 		__cursorPositionStack[i] = make_ddVec2(-1, -1);
@@ -51,6 +59,8 @@ void init_cursor(void)
 
 void cursor_moveTo(int x, int y)
 {
+	x++;
+	y++;
 	cursorPosition.x = x;
 	cursorPosition.y = y;
 	chPrint("\x1b[");
@@ -67,8 +77,8 @@ void cursor_move(int x, int y)
 {
 	cursorPosition.x += x;
 	cursorPosition.y += y;
-	int dx = ddabs(x) / x;
-	int dy = ddabs(y) / y;
+	int dx = (x >= 0) ? 1 : -1;
+	int dy = (y >= 0) ? 1 : -1;
 	if (x != 0)
 	{
 		if (dx == -1)
@@ -198,10 +208,34 @@ void cursor_dsWriteLine(const ddString ds)
 void cursor_clear(void)
 {
 	cursor_moveTo(consoleWidth, consoleHeight);
+	cursor_setBColor(cursorBGColor);
 	chPrint("\x1b[1J");
 	chPrint("\x1b[0;0H");
 	cursorPosition.x = 0;
 	cursorPosition.y = 0;
+}
+
+
+void cursor_setFColorRGB(int r, int g, int b)
+{
+	ddFColor dfc = make_ddFColor(r, g, b);
+	dsPrint(dfc.color);
+	raze_ddFColor(&dfc);
+}
+void cursor_setFColor(ddColor dc)
+{
+	 cursor_setFColorRGB(dc.r, dc.g, dc.b);
+}
+
+void cursor_setBColorRGB(int r, int g, int b)
+{
+	ddBColor dbc = make_ddBColor(r, g, b);
+	dsPrint(dbc.color);
+	raze_ddBColor(&dbc);
+}
+void cursor_setBColor(ddColor dc)
+{
+	cursor_setBColorRGB(dc.r, dc.g, dc.b);
 }
 
 

@@ -5,15 +5,17 @@
 #include <ddcMap.h>
 #include <math.h>
 
-double abs(double n);
+double ddabs(double n);
 ddsize ddfact(ddsize n);
 double ddsqrt(double n);
 double ddsin(double n);
 
+/*
 double ddsin(double n)
 {
 	return n - ((n
 }
+*/
 
 double ddsqrt(double n)
 { 

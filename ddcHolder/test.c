@@ -5,9 +5,9 @@
 
 int main(void)
 {
-	holder h = make_holder(5);
+	ddHolder h = make_ddHolder(5);
 
-	hpush(h, bool true);
+	hpush(h, bool, true);
 	hpush(h, int, true);
 
 	return 0;

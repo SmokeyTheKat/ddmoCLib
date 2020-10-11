@@ -12,6 +12,14 @@ const char* cset_darkBlock = "▓";
 const char* cset_leftBar = "▕";
 const char* cset_rightBar = "▏";
 const char* cset_lowerBar = "▁";
+const char* cset_verticalBar = "│";
+const char* cset_horizontalBar = "─";
+const char* cset_upLeftBar = "┐";
+const char* cset_upRightBar = "┌";
+const char* cset_downLeftBar = "┘";
+const char* cset_downRightBar = "└";
+const char* cset_leftStopBar = "├";
+const char* cset_rightStopBar = "┤";
 
 
 #endif

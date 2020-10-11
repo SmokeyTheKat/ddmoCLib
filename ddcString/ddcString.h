@@ -20,6 +20,8 @@ void dscpy(ddString* _d, const ddString* _s);
 void dsadd(ddString* _d, ddString* _s);
 bool dscmp(ddString* _d, ddString* _s);
 void dsmulds(ddString* _d, ddsize _n);
+void dsPushDsBack(ddString* _d, const ddString);
+void dsPushDsFront(ddString* _d, const ddString);
 void dsPushChBack(ddString* _d, const char* _ch);
 void dsPushCBack(ddString* _d, const char _c);
 void dsPushChFront(ddString* _d, const char* _ch);
@@ -27,15 +29,10 @@ void dsPushCFront(ddString* _d, const char _c);
 
 static int __floatTdsCount(int number, int count);
 
-
-
-
 void chlen(const char* _c, ddsize* _l);
 void chcpy(char* _d, const char* _s, ddsize _len);
 void chcpyos(char* _d, const char* _s, ddsize _do, ddsize _so, ddsize _l);
 bool chcmp(const char* _d, const char* _s);
-
-
 
 void _chcpy(char* _d, const char* _s, ddsize _len);
 void _chcpyos(char* _d, const char* _s, ddsize _do, ddsize _so, ddsize _l);
@@ -142,6 +139,13 @@ void dsPushChBack(ddString* _d, const char* _ch)
 	chcpyos(_d->cstr, _ch, _d->length, 0, _clen);
 	_d->length += _clen;
 }
+void dsPushDsBack(ddString* _d, const ddString _s)
+{
+	if (_d->capacity < _d->length + _s.length)
+		dsres(_d, _d->length + _s.length + __BYINC);
+	chcpyos(_d->cstr, _s.cstr, _d->length, 0, _s.length);
+	_d->length += _s.length;
+}
 void dsPushCBack(ddString* _d, const char _c)
 {
 	if (_d->capacity < _d->length + 1)
@@ -162,6 +166,17 @@ void dsPushChFront(ddString* _d, const char* _ch)
 	chcpyos(_t, _d->cstr, _clen, 0, _d->length);
 	raze_ddString(_d);
 	_d->length += _clen;
+	_d->cstr = _t;
+}
+void dsPushDsFront(ddString* _d, const ddString _s)
+{
+	if (_d->capacity < _d->length + _s.length)
+		dsres(_d, _d->length + _s.length + __BYINC);
+	char* _t = make(char, _d->length + _s.length);
+	dscpy(_t, _s.cstr);
+	chcpyos(_t, _d->cstr, _s.cstr, 0, _d->length);
+	raze_ddString(_d);
+	_d->length += _s.length;
 	_d->cstr = _t;
 }
 void dsPushCFront(ddString* _d, const char _c)

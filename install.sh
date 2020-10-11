@@ -12,3 +12,6 @@ cp ./ddcMath/ddcMath.h /usr/include/
 cp ./ddcMap/ddcMap.h /usr/include/
 cp ./ddcCharSets/ddcCharSets.h /usr/include/
 cp ./ddcScreen/ddcCursor/ddcCursor.h /usr/include/
+cp ./ddcScreen/ddcColors/ddcColors.h /usr/include/
+cp ./ddcScreen/ddcShapes/ddcShapes.h /usr/include/
+cp ./ddcScreen/ddcLine/ddcLine.h /usr/include/

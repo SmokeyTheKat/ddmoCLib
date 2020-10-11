@@ -8,9 +8,18 @@
 #include <ddcPrint.h>
 #include <ddcCharSets.h>
 
+#include <stdio.h>
+
 #include <time.h>
 
 typedef struct ddLine ddLine;
+
+
+void draw_linePoints(ddVec2 p1, ddVec2 p2, const char* ch);
+void draw_line(ddLine dl, const char* ch);
+ddLine make_ddLine(ddVec2 _p1, ddVec2 _p2);
+
+
 
 struct ddLine
 {
@@ -19,6 +28,10 @@ struct ddLine
 	float slope;
 	float constant;
 };
+
+
+
+
 ddLine make_ddLine(ddVec2 _p1, ddVec2 _p2)
 {
 	ddLine dl;
@@ -31,105 +44,120 @@ ddLine make_ddLine(ddVec2 _p1, ddVec2 _p2)
 
 
 
-void draw_linePoints(ddVec2 p1, ddVec2 p2);
-void draw_line(ddLine dl);
-
-
-float get_dist(ddVec2 a, ddVec2 b)
+void draw_linePoints(ddVec2 p1, ddVec2 p2, const char* ch)
 {
-	float o = b.y - a.y;
-	float p = b.x - a.x;
-	return (float)(sqrt(pow(o,2)+pow(p,2)));
+	draw_line(make_ddLine(p1, p2), ch);
 }
 
 
-void draw_linePoints(ddVec2 p1, ddVec2 p2)
+void draw_line(ddLine dl, const char* ch)
 {
-	draw_line(make_ddLine(p1, p2));
+	const int ndx       = ddabs(dl.p2.x-dl.p1.x);
+	const int ndy       = ddabs(dl.p2.y-dl.p1.y);
+	const int d[2]     = { (dl.p1.x <= dl.p2.x) ? 1 : -1, (dl.p1.y <= dl.p2.y) ? 1 : -1 };
+	const int ci[2]     = { ndy, ndx };
+	int c[2]            = { ndy, ndx };
+	int po[2]           = { dl.p1.x, dl.p1.y };
+	cursor_moveTo(po[0], po[1]);
+	cursor_chWrite(ch);
+	switch (po[0] != dl.p2.x || po[1] != dl.p2.y)
+	{
+		case 1:
+		{
+			do
+			{
+				int i = (c[0]>c[1])+(c[0]==c[1]);
+				c[i] += ci[i];
+				po[i] += d[i];
+				cursor_moveTo(po[0], po[1]);
+				cursor_chWrite(ch);
+			} while (po[0] != dl.p2.x || po[1] != dl.p2.y);
+		}
+		case 0:	return;
+	}
 }
-void draw_line(ddLine dl)
+
+
+void draw_lineO(ddLine dl, const char* ch)
 {
-
-
 	ddVec2 p = make_ddVec2(dl.p1.x, dl.p1.y);
 
+	int ndx = ddabs(dl.p2.x-dl.p1.x);
+	int ndy = ddabs(dl.p2.y-dl.p1.y);
 
-
-	/*
-	 * start you code
-	 * point1 = "dl.p1"
-	 * point1 = "dl.p1"
-	 * point2 = "dl.p2"
-	 * to get y or x do "dl.p1.x" or "dl.p2.y"
-	 * p is the cursor or the current position
-	 * p is initizalized as the first point (dl.p1.x, dl.p2.y)
-	 *
-	 * to draw:
-	 * cursor_moveTo(p.x, p.y);
-	 * cursor_chWrite(cset_block);
-	 *
-	 *
-	 * to test, exit and type:
-	 * gcc test.c -o test
-	 * ./test
-	 *
-	 *
-	 *
-	 *
-	 */
-
-/*
-	//int dx = dl.p2.x-dl.p1.x/ddabs(dl.p2.x-dl.p1.x);
-	//int dy = dl.p2.y-dl.p1.y/ddabs(dl.p2.y-dl.p1.y);
 	int dx = (dl.p1.x <= dl.p2.x) ? 1 : -1;
 	int dy = (dl.p1.y <= dl.p2.y) ? 1 : -1;
-	int brx;
-	int bry;
-	if (dx == 1)
-		brx = dl.p2.x;
-	else
-		brx = dl.p1.x;
-	if (dy == 1)
-		bry = dl.p2.y;
-	else
-		bry = dl.p1.y;
-	int cx = 1;
-	int cy = 1;
-	while(p.x < dl.p2.x || p.y < dl.p2.y)
-	//while(!v2cmp(p, dl.p2))
+
+	int cxinc = ndy;
+	int cyinc = ndx;
+
+	int cx = cxinc;
+	int cy = cyinc;
+
+	cursor_moveTo(p.x, p.y);
+	cursor_chWrite(ch);
+	while(!v2cmp(p, dl.p2))
 	{
-		float rx = cx/brx;
-		float ry = cy/bry;
-		if (rx < ry)
+		if (cx < cy)
 		{
-			cx++;
+			cx+=cxinc;
 			p.x += dx;
+			cursor_moveToVec(p);
 		}
-		else if (ry < rx)
+		else if (cy < cx)
 		{
-			cy++;
+			cy+=cyinc;
 			p.y += dy;
+			cursor_moveToVec(p);
 		}
-		else if (rx == ry)
+		else //if (cx == cy)
 		{
-			if (1/brx < 1/bry)
+			if (ndx <= ndy)
 			{
-				cx++;
+				cx+=cxinc;
 				p.x += dx;
+				cursor_moveToVec(p);
 			}
 			else
 			{
-				cy++;
+				cy+=cyinc;
 				p.y += dy;
+				cursor_moveToVec(p);
 			}
 		}
-		intPrint(cx);
-		//cursor_moveTo(p.x, p.y);
-		//cursor_chWrite(cset_block);
+		cursor_chWrite(ch);
 	}
-*/
 
 }
+
+
+void draw_lineO2(ddLine dl, const char* ch)
+{
+	int dx = dl.p2.x-dl.p1.x;
+	int dy = dl.p2.y-dl.p1.y;
+	int yi = 1;
+	if (dy < 0)
+	{
+		yi = -1;
+		dy = -dy;
+	}
+	int D = (2*dy) - dx;
+	int y = dl.p1.y;
+
+	for (int x = dl.p1.x; x < dl.p2.x; x++)
+	{
+		cursor_moveTo(x, y);
+		cursor_chWrite(ch);
+		if (D > 0)
+		{
+			y += yi;
+			D += 2*(dy-dx);
+		}
+		else
+			D += 2*dy;
+	}
+}
+
 
 
 #endif
