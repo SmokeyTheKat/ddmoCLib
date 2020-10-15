@@ -21,18 +21,8 @@ MAINF__
 	sleep(2);
 
 	cursor_setBColorRGB(255,0,0);
-	dsq = make_ddSquare(make_ddVec2(9, 0), make_ddVec2(0,5));
+	dsq = make_ddSquare(make_ddVec2(1, 1), make_ddVec2(8,4));
 	drawOutline_ddSquare(dsq, " ");
-
-/*
-
-	cursor_setBColorRGB(0,0,255);
-	dsq = make_ddSquare(make_ddVec2(66, 11), make_ddVec2(8,3));
-	drawOutline_ddSquare(dsq, " ");
-
-*/
-
-
 
 	for(;;);
 

@@ -3,13 +3,9 @@
 
 #include <stdlib.h>
 
-#ifndef __ibmxl__
-	typedef enum Ostatus Ostatus;
-	enum Ostatus { inactive, active, deleted };
-#else
-	enum Ostatus { inactive, active, deleted };
-#endif
 
+typedef enum Ostatus Ostatus;
+enum Ostatus { inactive, active, deleted };
 
 void void__(void) { return; };
 

@@ -13,10 +13,13 @@ const ddsize consoleWidth = 170;
 const ddsize consoleHeight = 47;
 
 ddVec2 cursorPosition;
+ddColor cursorFGColor;
 ddColor cursorBGColor;
 
 static ddVec2 __v2empty;
 static ddVec2 __cursorPositionStack[__CURSOR_STACK_LENGTH];
+static ddColor __cursorFGStack[__CURSOR_STACK_LENGTH];
+static ddColor __cursorBGStack[__CURSOR_STACK_LENGTH];
 
 void init_cursor(void);
 void cursor_moveTo(int x, int y);
@@ -37,10 +40,12 @@ void cursor_dsWrite(const ddString ds);
 void cursor_chWriteLine(const char* ch);
 void cursor_dsWriteLine(const ddString ds);
 void cursor_clear(void);
-void cursor_setFColor(ddColor dc);
-void cursor_setFColorRGB(int r, int g, int b);
-void cursor_setBColor(ddColor dc);
-void cursor_setBColorRGB(int r, int g, int b);
+void cursor_setFGColor(ddColor dc);
+void cursor_setFGColorRGB(int r, int g, int b);
+void cursor_setBGColor(ddColor dc);
+void cursor_setBGColorRGB(int r, int g, int b);
+bool cursor_colorPush(void);
+bool cursor_colorPop(void);
 
 #define cursor_dsWriteL cursor_dsWriteLine
 #define cursor_chWriteL cursor_chWriteLine
@@ -51,9 +56,14 @@ void init_cursor(void)
 {
 	__v2empty = make_ddVec2(-1, -1);
 	cursorBGColor = make_ddColor(0, 0, 0);
+	cursorFGColor = make_ddColor(255, 255, 255);
 	cursorPosition = make_ddVec2(0, 0);
 	for (int i = 0; i < __CURSOR_STACK_LENGTH; i++)
 		__cursorPositionStack[i] = make_ddVec2(-1, -1);
+	for (int i = 0; i < __CURSOR_STACK_LENGTH; i++)
+		__cursorFGStack[i] = make_ddColor(0,420,0);
+	for (int i = 0; i < __CURSOR_STACK_LENGTH; i++)
+		__cursorBGStack[i] = make_ddColor(0,420,0);
 }
 
 
@@ -208,7 +218,7 @@ void cursor_dsWriteLine(const ddString ds)
 void cursor_clear(void)
 {
 	cursor_moveTo(consoleWidth, consoleHeight);
-	cursor_setBColor(cursorBGColor);
+	cursor_setBGColor(cursorBGColor);
 	chPrint("\x1b[1J");
 	chPrint("\x1b[0;0H");
 	cursorPosition.x = 0;
@@ -216,26 +226,56 @@ void cursor_clear(void)
 }
 
 
-void cursor_setFColorRGB(int r, int g, int b)
+void cursor_setFGColorRGB(int r, int g, int b)
 {
+	cursorFGColor = make_ddColor(r, g, b);
 	ddFColor dfc = make_ddFColor(r, g, b);
 	dsPrint(dfc.color);
 	raze_ddFColor(&dfc);
 }
-void cursor_setFColor(ddColor dc)
+void cursor_setFGColor(ddColor dc)
 {
-	 cursor_setFColorRGB(dc.r, dc.g, dc.b);
+	 cursor_setFGColorRGB(dc.r, dc.g, dc.b);
 }
 
-void cursor_setBColorRGB(int r, int g, int b)
+void cursor_setBGColorRGB(int r, int g, int b)
 {
+	cursorBGColor = make_ddColor(r, g, b);
 	ddBColor dbc = make_ddBColor(r, g, b);
 	dsPrint(dbc.color);
 	raze_ddBColor(&dbc);
 }
-void cursor_setBColor(ddColor dc)
+void cursor_setBGColor(ddColor dc)
 {
-	cursor_setBColorRGB(dc.r, dc.g, dc.b);
+	cursor_setBGColorRGB(dc.r, dc.g, dc.b);
+}
+bool cursor_colorPop(void)
+{
+	for (int i = __CURSOR_STACK_LENGTH - 1; i >= 0; i--)
+	{
+		if (__cursorFGStack[i].g != 420)
+		{
+			cursor_setFGColor(__cursorFGStack[i]);
+			cursor_setBGColor(__cursorBGStack[i]);
+			__cursorFGStack[i].g = 420;
+			__cursorBGStack[i].g = 420;
+			return true;
+		}
+	}
+	return false;
+}
+bool cursor_colorPush(void)
+{
+	for (int i = 0; i < __CURSOR_STACK_LENGTH; i++)
+	{
+		if (__cursorFGStack[i].g == 420)
+		{
+			__cursorFGStack[i] = cursorFGColor;
+			__cursorBGStack[i] = cursorBGColor;
+			return true;
+		}
+	}
+	return false;
 }
 
 

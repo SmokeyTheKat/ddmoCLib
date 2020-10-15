@@ -21,7 +21,7 @@ MAINF__
 	cursor_clear();
 
 	//cursor_setBColorRGB(255, 255, 255);
-	cursor_setFColorRGB(0, 0, 0);
+	cursor_setFGColorRGB(0, 0, 0);
 
 	int inc = 3;
 
@@ -31,7 +31,7 @@ MAINF__
 		{
 			for (int k = 0; k < 170; k += inc)
 			{
-				cursor_setFColorRGB((int)ddMap(i, 0, 170, 0, 255),
+				cursor_setFGColorRGB((int)ddMap(i, 0, 170, 0, 255),
 							(int)ddMap(j, 0, 170, 0, 255),
 							(int)ddMap(k, 0, 170, 0, 255));
 				//cursor_setBColorRGB((int)ddMap(k, 0, 170, 0, 255),

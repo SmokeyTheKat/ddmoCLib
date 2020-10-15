@@ -52,26 +52,28 @@ void draw_linePoints(ddVec2 p1, ddVec2 p2, const char* ch)
 
 void draw_line(ddLine dl, const char* ch)
 {
-	const int ndx       = ddabs(dl.p2.x-dl.p1.x);
-	const int ndy       = ddabs(dl.p2.y-dl.p1.y);
-	const int d[2]     = { (dl.p1.x <= dl.p2.x) ? 1 : -1, (dl.p1.y <= dl.p2.y) ? 1 : -1 };
-	const int ci[2]     = { ndy, ndx };
-	int c[2]            = { ndy, ndx };
+	const int ci[2]     = { ddabs(dl.p2.y-dl.p1.y), ddabs(dl.p2.x-dl.p1.x) };
+	const int td        = ci[0]+ci[1];
+	const int d[2]      = {(dl.p1.x <= dl.p2.x) ? 1 : -1, (dl.p1.y <= dl.p2.y) ? 1 : -1 };
+	//int c[2]            = { ci[0], ci[1] };
+	int c[2]            = { 0,0 };
 	int po[2]           = { dl.p1.x, dl.p1.y };
+	int i               = 0;
 	cursor_moveTo(po[0], po[1]);
 	cursor_chWrite(ch);
-	switch (po[0] != dl.p2.x || po[1] != dl.p2.y)
+	switch (i < td)
 	{
 		case 1:
 		{
 			do
 			{
-				int i = (c[0]>c[1])+(c[0]==c[1]);
-				c[i] += ci[i];
-				po[i] += d[i];
+				int v = (c[0]>c[1])+(c[0]==c[1]);
+				c[v] += ci[v];
+				po[v] += d[v];
 				cursor_moveTo(po[0], po[1]);
 				cursor_chWrite(ch);
-			} while (po[0] != dl.p2.x || po[1] != dl.p2.y);
+				i++;
+			} while (i < td);
 		}
 		case 0:	return;
 	}
@@ -148,13 +150,10 @@ void draw_lineO2(ddLine dl, const char* ch)
 	{
 		cursor_moveTo(x, y);
 		cursor_chWrite(ch);
-		if (D > 0)
-		{
-			y += yi;
-			D += 2*(dy-dx);
-		}
-		else
-			D += 2*dy;
+		int dd = (D > 0);
+		y += yi*dd;
+		D += (2*(dy-dx))*dd;
+		D += (2*dy)*dd;
 	}
 }
 

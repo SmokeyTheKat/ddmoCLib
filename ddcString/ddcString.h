@@ -8,24 +8,42 @@
 typedef struct ddString ddString;
 
 ddString make_ddString(const char* _c);
+ddString make_ddString_multi(const ddString _c, ddsize _n);
+ddString make_ddString_multi_cstring(const char* _c, ddsize _n);
+
 ddString remake_ddString(ddString* _ds, const char* _c);
-ddString intTds(int _v);
-ddString floatTds(float _f);
-ddString dsmul(const char* _c, ddsize _n);
+
 void raze_ddString(ddString* _d);
 
 
-void dsres(ddString* _d, ddsize _nl);
-void dscpy(ddString* _d, const ddString* _s);
-void dsadd(ddString* _d, ddString* _s);
-bool dscmp(ddString* _d, ddString* _s);
-void dsmulds(ddString* _d, ddsize _n);
-void dsPushDsBack(ddString* _d, const ddString);
-void dsPushDsFront(ddString* _d, const ddString);
-void dsPushChBack(ddString* _d, const char* _ch);
-void dsPushCBack(ddString* _d, const char _c);
-void dsPushChFront(ddString* _d, const char* _ch);
-void dsPushCFront(ddString* _d, const char _c);
+ddString intTds(int _v);
+ddString floatTds(float _f);
+
+
+
+void ddString_resize(ddString* _d, ddsize _nl);
+
+void ddString_copy(ddString* _d, const ddString* _s);
+void ddString_copy_char(ddString* _d, const ddString* _s);
+
+void ddString_add(ddString* _d, ddString* _s);
+void ddString_add_char(ddString* _d, ddString* _s);
+
+bool ddString_compare(ddString* _d, ddString* _s);
+bool ddString_compare_char(ddString* _d, ddString* _s);
+
+//void ds_mulds(ddString* _d, ddsize _n);
+
+void ddString_push_back(ddString* _d, const ddString);
+void ddString_push_front(ddString* _d, const ddString);
+
+void ddString_push_cstring_back(ddString* _d, const char* _ch);
+void ddString_push_cstring_front(ddString* _d, const char* _ch);
+
+void ddString_push_char_back(ddString* _d, const char _c);
+void ddString_push_char_front(ddString* _d, const char _c);
+
+
 
 static int __floatTdsCount(int number, int count);
 
@@ -306,7 +324,6 @@ ddString remake_ddString(ddString* _ds, const char* _c)
 {
 	raze_ddString(_ds);
 	*_ds = make_ddString(_c);
-	_ds->status = active;
 }
 ddString make_ddString(const char* _c)
 {
@@ -317,7 +334,19 @@ ddString make_ddString(const char* _c)
 	_o.length = _len;
 	_o.capacity = _len + __BYINC;
 
-	_o.status = active;
+	_o.cstr = make(char, _o.capacity);
+	chcpy(_o.cstr, _c, _o.length);
+
+	return _o;
+}
+ddString make_empty_ddString(const char* _c)
+{
+	ddString _o;
+	ddsize _len = 0;
+	chlen(_c, &_len);
+
+	_o.length = _len;
+	_o.capacity = _len + __BYINC;
 
 	_o.cstr = make(char, _o.capacity);
 	chcpy(_o.cstr, _c, _o.length);
@@ -326,8 +355,11 @@ ddString make_ddString(const char* _c)
 }
 void raze_ddString(ddString* ds)
 {
-	raze(ds->cstr);
-	ds->status = deleted;
+	if (ds->cstr != nullptr)
+	{
+		raze(ds->cstr);
+		ds->cstr = nullptr;
+	}
 }
 
 
