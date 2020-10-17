@@ -5,10 +5,11 @@
 #include <ddcMap.h>
 #include <math.h>
 
-double ddabs(double n);
-ddsize ddfact(ddsize n);
-double ddsqrt(double n);
-double ddsin(double n);
+double ddMath_abs(double n);
+ddsize ddMath_factorial(ddsize n);
+double ddMath_sqrt(double n);
+double ddMath_sin(double n);
+double ddMath_map(double _v, double _l1, double _h1, double _l2, double _h2);
 
 /*
 double ddsin(double n)
@@ -17,7 +18,15 @@ double ddsin(double n)
 }
 */
 
-double ddsqrt(double n)
+
+
+
+double ddMath_map(double _v, double _l1, double _h1, double _l2, double _h2)
+{
+	return (_v-_l1) * ((_h2-_l2)/(_h1-_l1)) + _l2;
+}
+
+double ddMath_sqrt(double n)
 { 
 	double _t;
 	double _s;
@@ -33,15 +42,15 @@ double ddsqrt(double n)
 } 
 
 
-ddsize factt(ddsize n)
+ddsize ddMath_factorial(ddsize n)
 {
 	if (n == 0 || n == 1)
 		return 1;
 	else
-		return n * factt(n-1);
+		return n * ddMath_factorial(n-1);
 }
 
-double ddabs(double _n)
+double ddMath_abs(double _n)
 {
 	return (_n < 0) ? _n * -1 : _n;
 }

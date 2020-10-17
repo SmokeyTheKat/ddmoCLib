@@ -8,23 +8,26 @@
 #include <ddcString.h>
 
 
-#ifndef chPrintL
-	#define chPrintL chPrintLine
-	#endif
-#ifndef dsPrintL
-	#define dsPrintL dsPrintLine
-	#endif
-#ifndef ddPrint
-	#define ddPrint(t,v)
-	#endif
-
-
 void __ddPrint(const void* _v, const ddsize _len);
-void chPrint(const char* _ch);
-void chPrintLine(const char* _ch);
-void cPrint(const char _c);
-void dsPrint(const ddString _ds);
-void dsPrintLine(const ddString _ds);
+void ddPrint_cstring(const char* _ch);
+void ddPrint_cstring_nl(const char* _ch);
+
+void ddPrint_char(const char _c);
+void ddPrint_char_nl(const char _c);
+
+void ddPrint_ddString(const ddString _ds);
+void ddPrint_ddString_nl(const ddString _ds);
+
+void ddPrint_int(const int _v);
+void ddPrint_int_nl(const int _v);
+
+void ddPrint_float(const float _v);
+void ddPrint_float_nl(const float _v);
+
+void ddPrint_double(const double _v);
+void ddPrint_double_nl(const double _v);
+
+void ddPrint_nl(void);
 
 
 void __ddPrint(const void* _v, const ddsize _len)
@@ -57,40 +60,74 @@ void __ddPrint(const void* _v, const ddsize _len)
 
 
 
-void intPrint(int _v)
+void ddPrint_char(const char _c)
 {
-	ddString _ds = intTds(_v);
-	dsPrint(_ds);
+	__ddPrint(&_c, 1);
+}
+
+void ddPrint_char_nl(const char _c)
+{
+	ddPrint_char(_c);
+	ddPrint_char(DNL);
+}
+
+
+void ddPrint_nl(void)
+{
+	ddPrint_char(DNL);
+}
+
+void ddPrint_int(const int _v)
+{
+	ddString _ds = make_ddString_from_int(_v);
+	ddPrint_ddString(_ds);
 	raze_ddString(&_ds);
 }
-void fltPrint(float _v)
+void ddPrint_int_nl(const int _v)
 {
-	ddString _ds = floatTds(_v);
-	dsPrint(_ds);
+	ddPrint_int(_v);
+	ddPrint_nl();
+}
+
+void ddPrint_float(const float _v)
+{
+	ddString _ds = make_ddString_from_float(_v);
+	ddPrint_ddString(_ds);
 	raze_ddString(&_ds);
 }
-
-#ifndef dblPrint
-	#define dblPrint(v) fltPrint((float)v)
-	#endif
-
-/*
-void dblPrint(double _v)
+void ddPrint_float_nl(const float _v)
 {
-	fltPrint((float)_v);
+	ddPrint_float(_v);
+	ddPrint_nl();
 }
-*/
+
+void ddPrint_double(const double _v)
+{
+	ddString _ds = make_ddString_from_float(_v);
+	ddPrint_ddString(_ds);
+	raze_ddString(&_ds);
+}
+void ddPrint_double_nl(const double _v)
+{
+	ddPrint_double(_v);
+	ddPrint_nl();
+}
 
 
-
-
-
-void chPrint(const char* _ch)
+void ddPrint_cstring(const char* _ch)
 {
 	ddsize _len;
-	chlen(_ch, &_len);
+	cstring_get_length(_ch, &_len);
 	__ddPrint(_ch, _len);
 }
+void ddPrint_cstring_nl(const char* _ch)
+{
+	ddPrint_cstring(_ch);
+	ddPrint_nl();
+}
+
+
+/*
 void chPrintC(ddsize _l, ...)
 {
 	va_list arg;
@@ -100,25 +137,14 @@ void chPrintC(ddsize _l, ...)
 		chPrint(va_arg(arg, const char*));
 	va_end(arg);
 }
+*/
 
-void chPrintLine(const char* _ch)
-{
-	chPrint(_ch);
-	cPrint(dnl);
-}
-
-
-void cPrint(const char _c)
-{
-	__ddPrint(&_c, 1);
-}
-
-
-void dsPrint(const ddString _ds)
+void ddPrint_ddString(const ddString _ds)
 {
 	__ddPrint(_ds.cstr, _ds.length);
 }
 
+/*
 void dsPrintC(ddsize _l, ...)
 {
 	va_list arg;
@@ -128,11 +154,12 @@ void dsPrintC(ddsize _l, ...)
 		dsPrint(va_arg(arg, ddString));
 	va_end(arg);
 }
+*/
 
-void dsPrintLine(const ddString _ds)
+void ddPrint_ddString_nl(const ddString _ds)
 {
-	dsPrint(_ds);
-	cPrint(dnl);
+	ddPrint_ddString(_ds);
+	ddPrint_nl();
 }
 
 

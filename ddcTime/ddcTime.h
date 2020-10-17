@@ -4,30 +4,30 @@
 #include <ddcDef.h>
 #include <time.h>
 
-#define ddTimeThis(x,y,v) ddTimerStart();for (int i = 0; i < y; i++){x};v=ddTimerStop();
+#define ddTimer_time_statement(x,y,v) ddTimer_start();for (int i = 0; i < y; i++){x};v=ddTimer_stop();
 
-void ddTimerStart(void);
-double ddTimerStop(void);
-double ddTimerTime(void);
-bool ddTimerIsPast(double _v);
+void ddTimer_start(void);
+double ddTimer_stop(void);
+double ddTimer_get_time(void);
+bool ddTimer_is_past(double _v);
 
 static clock_t __dt_begin;
 static clock_t __dt_end;
 
-void ddTimerStart(void)
+void ddTimer_start(void)
 {
 	__dt_begin = clock();
 }
-double ddTimerStop(void)
+double ddTimer_stop(void)
 {
 	__dt_end = clock();
 	return ((double)(__dt_end - __dt_begin) / CLOCKS_PER_SEC);
 }
-double ddTimerTime(void)
+double ddTimer_get_time(void)
 {
 	return ((double)(clock() - __dt_begin) / CLOCKS_PER_SEC);
 }
-bool ddTimerIsPast(double _v)
+bool ddTimer_is_past(double _v)
 {
 	return (_v < ((double)(clock() - __dt_begin) / CLOCKS_PER_SEC));
 }

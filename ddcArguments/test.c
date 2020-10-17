@@ -1,17 +1,18 @@
 #include "ddcArguments.h"
+#include <ddcPrint.h>
 
 int main(ddsize agsc, char** ags)
 {
-	ddArguments da = readArguments(ags, agsc);
-	ddString ds = nddString("yo");
-	if (daHasds(da, ds))
+	ddArgs da = init_ddArgs(ags, agsc);
+	ddString ds = make_ddString("yo");
+	if (ddArgs_has_cstring(da, "yo"))
 	{
-		printf("OMGOMGOMGM\n");
+		ddPrint_cstring_nl("it has yo");
 	}
 	else
 	{
-		printf(da.ags[1]);
-		printf("\n");
+		ddPrint_cstring_nl("itn't has yo");
 	}
+	raze_ddString(&ds);
 	return 0;
 }

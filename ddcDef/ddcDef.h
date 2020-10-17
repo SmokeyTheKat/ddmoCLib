@@ -4,8 +4,10 @@
 #include <stdlib.h>
 
 
-typedef enum Ostatus Ostatus;
-enum Ostatus { inactive, active, deleted };
+typedef enum DOStatus DOStatus;
+typedef enum DODelete DODelete;
+enum DOStatus { DOS_INACTIVE=0, DOS_ACTIVE, DOS_DELETED };
+enum DODelete { DOD_MANUAL=0, DOD_AUTO };
 
 void void__(void) { return; };
 
@@ -48,8 +50,8 @@ void void__(void) { return; };
 	#define MAINF__ int main(ddsize agsc, char** ags)
 	#endif
 #ifndef SET_DDARGS__
-	#define SET_DDARGS__ ddArguments da = make_ddArguments(ags, agsc)
-	#define SET_DDARGSV__(x) ddArguments x = make_ddArguments(ags, agsc)
+	#define SET_DDARGS__ ddArgs da = init_ddArgs(ags, agsc)
+	#define SET_DDARGSV__(x) ddArgs x = init_ddArgs(ags, agsc)
 	#endif
 #ifndef oBLOCK
 	#define oBLOCK {
@@ -70,8 +72,8 @@ void void__(void) { return; };
 #ifndef ddsize
 	#define ddsize unsigned long long int
 	#endif
-#ifndef dnl
-	#define dnl '\n'
+#ifndef DNL
+	#define DNL '\n'
 	#endif
 #ifndef NULL
 	#define NULL 0

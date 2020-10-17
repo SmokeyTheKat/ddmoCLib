@@ -11,11 +11,6 @@
 
 MAINF__
 {
-	SET_DDARGS__;
-	if (daHasch(da, "yo"))
-	{
-		chPrintL("yo yo yo");
-	}
 
 	init_cursor();
 	cursor_clear();
@@ -23,7 +18,7 @@ MAINF__
 	//cursor_setBColorRGB(255, 255, 255);
 	cursor_setFGColorRGB(0, 0, 0);
 
-	int inc = 3;
+	int inc = 8;
 
 	for (int i = 0; i < 170; i += inc)
 	{
@@ -37,13 +32,14 @@ MAINF__
 				//cursor_setBColorRGB((int)ddMap(k, 0, 170, 0, 255),
 			//				(int)ddMap(i, 0, 170, 0, 255),
 			//				(int)ddMap(j, 0, 170, 0, 255));
-				chPrint(cset_block); 
+				ddPrint_cstring(cset_block); 
 			}
 		}
 	}
+	for(;;);
 
 	//cursor_chWrite("YO");
-	chPrintL("");
+	ddPrint_nl();
 
 	return 0;
 }

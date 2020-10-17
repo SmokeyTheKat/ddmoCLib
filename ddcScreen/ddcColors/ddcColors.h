@@ -43,17 +43,17 @@ ddFColor make_ddFColor(int r, int g, int b)
 {
 	ddFColor _o;
 	ddString cs = make_ddString("");
-	dsPushChFront(&cs, "\x1b[38;2;");
-	ddString dr = intTds(r);
-	ddString dg = intTds(g);
-	ddString db = intTds(b);
+	ddString_push_cstring_front(&cs, "\x1b[38;2;");
+	ddString dr = make_ddString_from_int(r);
+	ddString dg = make_ddString_from_int(g);
+	ddString db = make_ddString_from_int(b);
 
-	dsPushDsBack(&cs, dr);
-	dsPushChBack(&cs, ";");
-	dsPushDsBack(&cs, dg);
-	dsPushChBack(&cs, ";");
-	dsPushDsBack(&cs, db);
-	dsPushChBack(&cs, "m");
+	ddString_push_back(&cs, dr);
+	ddString_push_cstring_back(&cs, ";");
+	ddString_push_back(&cs, dg);
+	ddString_push_cstring_back(&cs, ";");
+	ddString_push_back(&cs, db);
+	ddString_push_cstring_back(&cs, "m");
 
 	raze_ddString(&dr);
 	raze_ddString(&dg);
@@ -66,17 +66,17 @@ ddBColor make_ddBColor(int r, int g, int b)
 {
 	ddBColor _o;
 	ddString cs = make_ddString("");
-	dsPushChFront(&cs, "\x1b[48;2;");
-	ddString dr = intTds(r);
-	ddString dg = intTds(g);
-	ddString db = intTds(b);
+	ddString_push_cstring_front(&cs, "\x1b[48;2;");
+	ddString dr = make_ddString_from_int(r);
+	ddString dg = make_ddString_from_int(g);
+	ddString db = make_ddString_from_int(b);
 
-	dsPushDsBack(&cs, dr);
-	dsPushChBack(&cs, ";");
-	dsPushDsBack(&cs, dg);
-	dsPushChBack(&cs, ";");
-	dsPushDsBack(&cs, db);
-	dsPushChBack(&cs, "m");
+	ddString_push_back(&cs, dr);
+	ddString_push_cstring_back(&cs, ";");
+	ddString_push_back(&cs, dg);
+	ddString_push_cstring_back(&cs, ";");
+	ddString_push_back(&cs, db);
+	ddString_push_cstring_back(&cs, "m");
 
 	raze_ddString(&dr);
 	raze_ddString(&dg);

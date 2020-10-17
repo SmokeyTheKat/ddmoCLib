@@ -3,31 +3,43 @@
 
 #ifndef __ddcArguments__
 #define __ddcArguments__
-typedef struct ddArguments ddArguments;
+typedef struct ddArgs ddArgs;
 
-struct ddArguments
+ddArgs init_ddArgs(char** _ags, ddsize _agsc);
+bool ddArgs_has_cstring(ddArgs _da, const char* _ch);
+bool ddArgs_has_ddString(ddArgs _da, ddString _ds);
+void ddArgs_get_ddString(ddArgs _da, ddString* _ds, ddsize _i);
+
+struct ddArgs
 {
 	ddsize agsc;
 	char** ags;
 };
 
-ddArguments make_ddArguments(char** _ags, ddsize _agsc)
+ddArgs init_ddArgs(char** _ags, ddsize _agsc)
 {
-	ddArguments _o;
+	ddArgs _o;
 	_o.ags = _ags;
 	_o.agsc = _agsc;
 	return _o;
 }
 
-bool daHasch(ddArguments _da, const char* _ch)
+void ddArgs_get_ddString(ddArgs _da, ddString* _ds, ddsize _i)
+{
+	if (_ds->status == DOS_DELETED) return;
+	if (_da.agsc <= _i) return;
+	remake_ddString(_ds, _da.ags[_i]);
+}
+
+bool ddArgs_has_cstring(ddArgs _da, const char* _ch)
 {
 	for (ddsize i = 0; i < _da.agsc; i++)
 	{
-		if (chcmp(_ch, _da.ags[i]))  return true;
+		if (cstring_compare(_ch, _da.ags[i]))  return true;
 	}
 	return false;
 }
-bool daHasds(ddArguments _da, ddString _ds)
+bool ddArgs_has_ddString(ddArgs _da, ddString _ds)
 {
 	for (ddsize i = 0; i < _da.agsc; i++)
 	{

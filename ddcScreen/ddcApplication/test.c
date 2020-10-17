@@ -24,7 +24,7 @@ MAINF__
 	ddText dsdt = make_ddText(make_ddString("yo"),
 				 make_ddVec2(0, 0),
 				 make_ddColor(0,0,0),
-				 make_ddColor(255,0,0));
+				 make_ddColor(255,255,0));
 
 	ddPanel dp = make_ddPanel(make_ddVec2(90,10),
 				  make_ddVec2(41,20),
@@ -41,8 +41,7 @@ MAINF__
 	ddSelect_addOption(&ds, dsdt);
 	ddSelect_addOption(&ds, dsdt);
 	ddSelect_addOption(&ds, dsdt);
-
-
+	ddSelect_addOption(&ds, dsdt);
 
 	draw_ddText(dt);
 	draw_ddPanel(dp);

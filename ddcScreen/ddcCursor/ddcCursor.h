@@ -73,11 +73,11 @@ void cursor_moveTo(int x, int y)
 	y++;
 	cursorPosition.x = x;
 	cursorPosition.y = y;
-	chPrint("\x1b[");
-	intPrint(y);
-	chPrint(";");
-	intPrint(x);
-	chPrint("H");
+	ddPrint_cstring("\x1b[");
+	ddPrint_int(y);
+	ddPrint_cstring(";");
+	ddPrint_int(x);
+	ddPrint_cstring("H");
 }
 void cursor_moveToVec(ddVec2 v)
 {
@@ -93,15 +93,15 @@ void cursor_move(int x, int y)
 	{
 		if (dx == -1)
 		{
-			chPrint("\x1b[");
-			intPrint(ddabs(x));
-			chPrint("N");
+			ddPrint_cstring("\x1b[");
+			ddPrint_int(ddMath_abs(x));
+			ddPrint_cstring("N");
 		}
 		else
 		{
-			chPrint("\x1b[");
-			intPrint(x);
-			chPrint("C");
+			ddPrint_cstring("\x1b[");
+			ddPrint_int(x);
+			ddPrint_cstring("C");
 
 		}
 
@@ -110,15 +110,15 @@ void cursor_move(int x, int y)
 	{
 		if (dy == -1)
 		{
-			chPrint("\x1b[");
-			intPrint(ddabs(y));
-			chPrint("A");
+			ddPrint_cstring("\x1b[");
+			ddPrint_int(ddMath_abs(y));
+			ddPrint_cstring("A");
 		}
 		else
 		{
-			chPrint("\x1b[");
-			intPrint(y);
-			chPrint("B");
+			ddPrint_cstring("\x1b[");
+			ddPrint_int(y);
+			ddPrint_cstring("B");
 
 		}
 
@@ -130,27 +130,27 @@ void cursor_moveVec(ddVec2 v)
 }
 void cursor_moveUp(void)
 {
-	chPrint("\x1b[A");
+	ddPrint_cstring("\x1b[A");
 	cursorPosition.y++;
 }
 void cursor_moveDown(void)
 {
-	chPrint("\x1b[B");
+	ddPrint_cstring("\x1b[B");
 	cursorPosition.y--;
 }
 void cursor_moveLeft(void)
 {
-	chPrint("\x1b[D");
+	ddPrint_cstring("\x1b[D");
 	cursorPosition.x--;
 }
 void cursor_moveRight(void)
 {
-	chPrint("\x1b[C");
+	ddPrint_cstring("\x1b[C");
 	cursorPosition.x++;
 }
 void cursor_return(void)
 {
-	chPrint("\r");
+	ddPrint_cstring("\r");
 	cursorPosition.x = 0;
 }
 void cursor_home(void)
@@ -159,16 +159,16 @@ void cursor_home(void)
 }
 void cursor_deleteLine(void)
 {
-	chPrint("\x1b[2K");
+	ddPrint_cstring("\x1b[2K");
 }
 bool cursor_pop(void)
 {
 	for (int i = __CURSOR_STACK_LENGTH - 1; i >= 0; i--)
 	{
-		if (!v2cmp(__v2empty, __cursorPositionStack[i]))
+		if (!ddVec2_compare(__v2empty, __cursorPositionStack[i]))
 		{
-			v2set(&cursorPosition, __cursorPositionStack[i]);
-			v2set(&__cursorPositionStack[i], __v2empty);
+			ddVec2_set(&cursorPosition, __cursorPositionStack[i]);
+			ddVec2_set(&__cursorPositionStack[i], __v2empty);
 			cursor_moveToVec(cursorPosition);
 			return true;
 		}
@@ -179,9 +179,9 @@ bool cursor_push(void)
 {
 	for (int i = 0; i < __CURSOR_STACK_LENGTH; i++)
 	{
-		if (v2cmp(__v2empty, __cursorPositionStack[i]))
+		if (ddVec2_compare(__v2empty, __cursorPositionStack[i]))
 		{
-			v2set(&__cursorPositionStack[i], cursorPosition);
+			ddVec2_set(&__cursorPositionStack[i], cursorPosition);
 			return true;
 		}
 	}
@@ -190,28 +190,28 @@ bool cursor_push(void)
 void cursor_chWrite(const char* ch)
 {
 	ddsize _len;
-	chlen(ch, &_len);
+	cstring_get_length(ch, &_len);
 	__ddPrint(ch, _len);
 	cursorPosition.x += _len;
 }
 void cursor_dsWrite(const ddString ds)
 {
-	dsPrint(ds);
+	ddPrint_ddString(ds);
 	cursorPosition.x += ds.length;
 }
 void cursor_chWriteLine(const char* ch)
 {
 	ddsize _len;
-	chlen(ch, &_len);
+	cstring_get_length(ch, &_len);
 	__ddPrint(ch, _len);
-	cPrint(dnl);
+	ddPrint_nl();
 	cursorPosition.y++;
 	cursorPosition.x = 0;
 }
 void cursor_dsWriteLine(const ddString ds)
 {
-	dsPrint(ds);
-	cPrint(dnl);
+	ddPrint_ddString(ds);
+	ddPrint_nl();
 	cursorPosition.y++;
 	cursorPosition.x = 0;
 }
@@ -219,8 +219,8 @@ void cursor_clear(void)
 {
 	cursor_moveTo(consoleWidth, consoleHeight);
 	cursor_setBGColor(cursorBGColor);
-	chPrint("\x1b[1J");
-	chPrint("\x1b[0;0H");
+	ddPrint_cstring("\x1b[1J");
+	ddPrint_cstring("\x1b[0;0H");
 	cursorPosition.x = 0;
 	cursorPosition.y = 0;
 }
@@ -230,7 +230,7 @@ void cursor_setFGColorRGB(int r, int g, int b)
 {
 	cursorFGColor = make_ddColor(r, g, b);
 	ddFColor dfc = make_ddFColor(r, g, b);
-	dsPrint(dfc.color);
+	ddPrint_ddString(dfc.color);
 	raze_ddFColor(&dfc);
 }
 void cursor_setFGColor(ddColor dc)
@@ -242,7 +242,7 @@ void cursor_setBGColorRGB(int r, int g, int b)
 {
 	cursorBGColor = make_ddColor(r, g, b);
 	ddBColor dbc = make_ddBColor(r, g, b);
-	dsPrint(dbc.color);
+	ddPrint_ddString(dbc.color);
 	raze_ddBColor(&dbc);
 }
 void cursor_setBGColor(ddColor dc)

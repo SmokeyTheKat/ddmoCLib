@@ -1,8 +1,8 @@
+#include <stdio.h>
 #include <ddcString.h>
 #include <ddcPrint.h>
 #include <ddcTime.h>
 #include <ddcDef.h>
-#include <ddcArguments.h>
 #include "ddcLine.h"
 #include <ddcVec.h>
 #include <stdio.h>
@@ -10,99 +10,58 @@
 
 MAINF__
 {
-	SET_DDARGS__;
-	if (daHasch(da, "yo"))
-	{
-		chPrintL("yo yo yo");
-	}
 	init_cursor();
 	cursor_clear();
 
-	draw_line(make_ddLine(make_ddVec2(5, 2), make_ddVec2(53, 4)), cset_block);
-
-/*
-
-	ddVec2 p1 = make_ddVec2(8,2);
-	ddVec2 p2 = make_ddVec2(82,33);
-
-	draw_line(make_ddLine(p1, p2), cset_block);
+	ddsize len = 1000;
 
 	ddVec2 p1 = make_ddVec2(0,0);
-	ddVec2 p2 = make_ddVec2(70,35);
+	ddVec2 p2 = make_ddVec2(82,32);
 
-	ddsize len = 1000;
-	double* times = make(double, len);
+
+	double* timea = make(double, len);
+
+
 	for (ddsize i = 0; i < len; i++)
 	{
-		ddTimerStart();
-		draw_line(make_ddLine(p1, p2), cset_block);
-		times[i] = ddTimerStop();
+		ddTimer_start();
+		draw_thin_line(make_ddLine(p1,p2), cset_block);
+		timea[i] = ddTimer_stop();
 	}
 
-	double total = 0;
+	double time = 0;
 	for (ddsize i = 0; i < len; i++)
-	{
-		total += times[i];
-	}
-
-	printf("%f", total/len);
-
-	chPrintL("");
-
-	raze(times);
-
-
-
-
-
-
-	for (int i = 0; i < 79; i++)
-	{
-		for (int j = 0; j < 38; j++)
-		{
-			p1 = make_ddVec2(i, j);
-			draw_line(make_ddLine(p1, p2), cset_block);
-			draw_line(make_ddLine(p2, p3), cset_block);
-			draw_line(make_ddLine(p3, p1), cset_block);
-			usleep(10000);
-			cursor_clear();
-		}
-	}
+		time += timea[i];
+	time /= len;
+	cursor_moveTo(0,37);
+	ddPrint_double(time);
 
 	
+	sleep(2);
 
 
+	p1.x+=15;
+	p2.x+=15;
+	time = 0;
 
-	for (int i = 0; i < 40; i++)
+	for (ddsize i = 0; i < len; i++)
 	{
-		draw_lineO2(make_ddLine(make_ddVec2(0, 0), make_ddVec2(170, i)), cset_block);
-		usleep(100000);
-		draw_lineO2(make_ddLine(make_ddVec2(0, 0), make_ddVec2(170, i)), " ");
-		if (i == 39)
-		{
-			for (int j = 170; j >= 0; j--)
-			{
-				draw_lineO2(make_ddLine(make_ddVec2(0, 0), make_ddVec2(j, 39)), cset_block);
-				usleep(100000);
-				draw_lineO2(make_ddLine(make_ddVec2(0, 0), make_ddVec2(j, 39)), " ");
-				if (j == 2)
-				{
-					for (int k = 0; k < 170; k++)
-					{
-						draw_lineO2(make_ddLine(make_ddVec2(k, 0), make_ddVec2(0, 39)), cset_block);
-						usleep(100000);
-						draw_lineO2(make_ddLine(make_ddVec2(k, 0), make_ddVec2(0, 39)), " ");
-					}
-				}
-			}
-			i = 1;
-
-		}
+		ddTimer_start();
+		dl2(make_ddLine(p1,p2), cset_block);
+		timea[i] = ddTimer_stop();
 	}
+	for (ddsize i = 0; i < len; i++)
+		time += timea[i];
+	time /= len;
+	cursor_moveTo(0,38);
+	ddPrint_double(time);
 
-*/
+
+	raze(timea);
+
 
 	cursor_moveTo(0, 40);
+
 
 	return 0;
 }

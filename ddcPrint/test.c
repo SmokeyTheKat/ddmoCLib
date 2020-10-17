@@ -10,6 +10,6 @@
 
 int main(ddsize agsc, char** ags)
 {
-	chPrintC(5, "yo", " ", "bro", "!", "OMG");
+	ddPrint_cstring_nl("YO");
 	return 0;
 }

@@ -17,7 +17,9 @@ typedef struct ddPanel ddPanel;
 typedef struct ddText ddText;
 
 typedef enum ddaTextAlign ddaTextAlign;
+typedef enum ddAppDrawingElems ddAppDrawingElems;
 enum ddaTextAlign { ALIGN_LEFT=0, ALIGN_CENTER, ALIGN_RIGHT };
+enum ddAppDrawingElems { DDAE_NONE=0, DDAE_DDSELECT, DDAE_DDPANEL, DDAE_TEXT, DDAE_LINE };
 
 ddApplication init_ddApplication(ddString _name, ddColor _fgc, ddColor _bgc);
 void exit_ddApplication(ddApplication* _da);
@@ -37,12 +39,12 @@ void raze_ddSelect(ddSelect* _ds);
 void draw_ddSelect(ddSelect _ds);
 
 
-
 struct ddApplication
 {
 	ddString name;
-	Ostatus status;
+	DOStatus status;
 	ddGArray drawStack;
+	ddAppDrawingElems* drawStackElems;
 	ddColor BGColor;
 	ddColor FGColor;
 };
@@ -56,12 +58,12 @@ struct ddText
 
 	ddaTextAlign textAlign;
 
-	Ostatus status;
+	DOStatus status;
 };
 
 struct ddSelect
 {
-	Ostatus status;
+	DOStatus status;
 
 	ddPanel* panel;
 
@@ -78,7 +80,7 @@ struct ddPanel
 	ddVec2 position;
 	ddVec2 size;
 
-	Ostatus status;
+	DOStatus status;
 
 	ddSquare element;
 	ddText title;
@@ -171,18 +173,6 @@ void draw_ddPanel(ddPanel _ds)
 
 	cursor_colorPop();
 }
-
-
-void* __get_init_value(ddsize _index, ddApplication _da)
-{
-	cursor_init();
-	cursor_home();
-	for (int i = 0; i < cursorPosition.x; i++)
-	{
-		cursor_moveTo
-	}
-}
-
 
 
 ddSelect make_ddSelect(ddPanel* _dp, ddsize _ds, ddColor _sbgc)
