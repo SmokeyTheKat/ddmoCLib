@@ -69,14 +69,14 @@ void draw_ddSquare(ddSquare _dsq)
 }
 void drawOutline_ddSquare(ddSquare _dsq)
 {
-	draw_linePoints(make_ddVec2(_dsq.position.x, _dsq.position.y),
+	draw_thick_line_points(make_ddVec2(_dsq.position.x, _dsq.position.y),
 			make_ddVec2(_dsq.position.x+_dsq.size.x-1, _dsq.position.y), _dsq.chr);
-	draw_linePoints(make_ddVec2(_dsq.position.x, _dsq.position.y),
+	draw_thick_line_points(make_ddVec2(_dsq.position.x, _dsq.position.y),
 			make_ddVec2(_dsq.position.x, _dsq.position.y+_dsq.size.y-1), _dsq.chr);
 
-	draw_linePoints(make_ddVec2(_dsq.position.x+_dsq.size.x-1, _dsq.position.y+_dsq.size.y-1),
+	draw_thick_line_points(make_ddVec2(_dsq.position.x+_dsq.size.x-1, _dsq.position.y+_dsq.size.y-1),
 			make_ddVec2(_dsq.position.x, _dsq.position.y+_dsq.size.y-1), _dsq.chr);
-	draw_linePoints(make_ddVec2(_dsq.position.x+_dsq.size.x-1, _dsq.position.y+_dsq.size.y-1),
+	draw_thick_line_points(make_ddVec2(_dsq.position.x+_dsq.size.x-1, _dsq.position.y+_dsq.size.y-1),
 			make_ddVec2(_dsq.position.x+_dsq.size.x-1, _dsq.position.y), _dsq.chr);
 }
 

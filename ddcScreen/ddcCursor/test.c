@@ -18,7 +18,9 @@ MAINF__
 	//cursor_setBColorRGB(255, 255, 255);
 	cursor_setFGColorRGB(0, 0, 0);
 
-	int inc = 8;
+	int inc = 3;
+
+yo:
 
 	for (int i = 0; i < 170; i += inc)
 	{
@@ -33,9 +35,11 @@ MAINF__
 			//				(int)ddMap(i, 0, 170, 0, 255),
 			//				(int)ddMap(j, 0, 170, 0, 255));
 				ddPrint_cstring(cset_block); 
+				usleep(100);
 			}
 		}
 	}
+goto yo;
 	for(;;);
 
 	//cursor_chWrite("YO");

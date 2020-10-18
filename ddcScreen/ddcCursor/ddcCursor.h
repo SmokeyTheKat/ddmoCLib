@@ -228,6 +228,8 @@ void cursor_clear(void)
 
 void cursor_setFGColorRGB(int r, int g, int b)
 {
+	if (r < 0 && g < 0 && b < 0)
+		return;
 	cursorFGColor = make_ddColor(r, g, b);
 	ddFColor dfc = make_ddFColor(r, g, b);
 	ddPrint_ddString(dfc.color);
@@ -240,6 +242,8 @@ void cursor_setFGColor(ddColor dc)
 
 void cursor_setBGColorRGB(int r, int g, int b)
 {
+	if (r < 0 && g < 0 && b < 0)
+		return;
 	cursorBGColor = make_ddColor(r, g, b);
 	ddBColor dbc = make_ddBColor(r, g, b);
 	ddPrint_ddString(dbc.color);

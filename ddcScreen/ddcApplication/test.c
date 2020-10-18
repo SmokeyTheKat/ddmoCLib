@@ -11,45 +11,69 @@ MAINF__
 	init_cursor();
 	cursor_clear();
 
-	ddText dt = make_ddText(make_ddString("yo"),
-				make_ddVec2(2, 2),
-				make_ddColor(0,0,255),
-				make_ddColor(0,255,0));
+	ddSelect ds1 = make_ddSelect(make_ddVec2(2,1),
+					      make_ddVec2(30,20),
+					      make_dft_ddText(make_constant_ddString("RED")),
+					      make_ddColor(255,0,0), 5, make_ddColor(0,0,255));
+	ddSelect ds2 = make_ddSelect(make_ddVec2(34,1),
+					      make_ddVec2(30,20),
+					      make_dft_ddText(make_constant_ddString("GREEN")),
+					      make_ddColor(0,255,0), 5, make_ddColor(0,0,255));
+	ddSelect ds3 = make_ddSelect(make_ddVec2(66,1),
+					      make_ddVec2(30,20),
+					      make_dft_ddText(make_constant_ddString("BLUE")),
+					      make_ddColor(0,0,255), 5, make_ddColor(0,0,255));
+	ddSelect ds4 = make_ddSelect(make_ddVec2(98,1),
+					      make_ddVec2(30,20),
+					      make_dft_ddText(make_constant_ddString("YELLOW")),
+					      make_ddColor(255,255,0), 5, make_ddColor(0,0,255));
+	ddSelect ds5 = make_ddSelect(make_ddVec2(130,1),
+					      make_ddVec2(30,20),
+					      make_dft_ddText(make_constant_ddString("AQUA")),
+					      make_ddColor(0,255,255), 5, make_ddColor(0,0,255));
 
-	ddText vdt = make_ddText(make_ddString("omg"),
-				 make_ddVec2(0, 0),
-				 make_ddColor(0,0,0),
-				 make_ddColor(255,255,0));
+	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("pick me yo")));
+	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("no pick me")));
+	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("yo")));
+	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("omg")));
+	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("BAHAHAHA")));
 
-	ddText dsdt = make_ddText(make_ddString("yo"),
-				 make_ddVec2(0, 0),
-				 make_ddColor(0,0,0),
-				 make_ddColor(255,255,0));
+	ddSelect_addOption(&ds2, make_dft_ddText(make_ddString("pick me yo")));
+	ddSelect_addOption(&ds2, make_dft_ddText(make_ddString("no pick me")));
+	ddSelect_addOption(&ds2, make_dft_ddText(make_ddString("yo")));
+	ddSelect_addOption(&ds2, make_dft_ddText(make_ddString("omg")));
+	ddSelect_addOption(&ds2, make_dft_ddText(make_ddString("BAHAHAHA")));
 
-	ddPanel dp = make_ddPanel(make_ddVec2(90,10),
-				  make_ddVec2(41,20),
-				  vdt,
-				  make_ddColor(255,255,0));
-	ddPanel dsp = make_ddPanel(make_ddVec2(20,10),
-					      make_ddVec2(31,20),
-					      vdt,
-					      make_ddColor(255,255,0));
+	ddSelect_addOption(&ds3, make_dft_ddText(make_ddString("pick me yo")));
+	ddSelect_addOption(&ds3, make_dft_ddText(make_ddString("no pick me")));
+	ddSelect_addOption(&ds3, make_dft_ddText(make_ddString("yo")));
+	ddSelect_addOption(&ds3, make_dft_ddText(make_ddString("omg")));
+	ddSelect_addOption(&ds3, make_dft_ddText(make_ddString("BAHAHAHA")));
 
-	ddSelect ds = make_ddSelect(&dsp, 5, make_ddColor(0,0,255));
+	ddSelect_addOption(&ds4, make_dft_ddText(make_ddString("pick me yo")));
+	ddSelect_addOption(&ds4, make_dft_ddText(make_ddString("no pick me")));
+	ddSelect_addOption(&ds4, make_dft_ddText(make_ddString("yo")));
+	ddSelect_addOption(&ds4, make_dft_ddText(make_ddString("omg")));
+	ddSelect_addOption(&ds4, make_dft_ddText(make_ddString("BAHAHAHA")));
 
-	ddSelect_addOption(&ds, dsdt);
-	ddSelect_addOption(&ds, dsdt);
-	ddSelect_addOption(&ds, dsdt);
-	ddSelect_addOption(&ds, dsdt);
-	ddSelect_addOption(&ds, dsdt);
+	ddSelect_addOption(&ds5, make_dft_ddText(make_ddString("pick me yo")));
+	ddSelect_addOption(&ds5, make_dft_ddText(make_ddString("no pick me")));
+	ddSelect_addOption(&ds5, make_dft_ddText(make_ddString("yo")));
+	ddSelect_addOption(&ds5, make_dft_ddText(make_ddString("omg")));
+	ddSelect_addOption(&ds5, make_dft_ddText(make_ddString("BAHAHAHA")));
 
-	draw_ddText(dt);
-	draw_ddPanel(dp);
-	draw_ddSelect(ds);
+	draw_ddSelect(ds1);
+	draw_ddSelect(ds2);
+	draw_ddSelect(ds3);
+	draw_ddSelect(ds4);
+	draw_ddSelect(ds5);
 
 	cursor_moveTo(0,40);
-	raze_ddText(&dt);
-	raze_ddPanel(&dp);
+	//raze_ddSelect(&ds1);
+	//raze_ddSelect(&ds2);
+	//raze_ddSelect(&ds3);
+	//raze_ddSelect(&ds4);
+	//raze_ddSelect(&ds5);
 
 	return 0;
 }
