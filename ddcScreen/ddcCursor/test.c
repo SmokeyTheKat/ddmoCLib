@@ -6,7 +6,6 @@
 #include <ddcVec.h>
 #include "ddcCursor.h"
 #include <ddcColors.h>
-#include <ddcMap.h>
 #include <ddcCharSets.h>
 
 MAINF__
@@ -28,12 +27,12 @@ yo:
 		{
 			for (int k = 0; k < 170; k += inc)
 			{
-				cursor_setFGColorRGB((int)ddMap(i, 0, 170, 0, 255),
-							(int)ddMap(j, 0, 170, 0, 255),
-							(int)ddMap(k, 0, 170, 0, 255));
-				//cursor_setBColorRGB((int)ddMap(k, 0, 170, 0, 255),
-			//				(int)ddMap(i, 0, 170, 0, 255),
-			//				(int)ddMap(j, 0, 170, 0, 255));
+				cursor_setFGColorRGB((int)ddMath_map(i, 0, 170, 0, 255),
+							(int)ddMath_map(j, 0, 170, 0, 255),
+							(int)ddMath_map(k, 0, 170, 0, 255));
+				//cursor_setBColorRGB((int)ddMath_map(k, 0, 170, 0, 255),
+			//				(int)ddMath_map(i, 0, 170, 0, 255),
+			//				(int)ddMath_map(j, 0, 170, 0, 255));
 				ddPrint_cstring(cset_block); 
 				usleep(100);
 			}

@@ -2,7 +2,6 @@
 #include <ddcPrint.h>
 #include <ddcString.h>
 #include <ddcLine.h>
-#include <ddcShapes.h>
 #include <stdio.h>
 
 #define ddGArray_get(h, i, t) (*((t*)__ddGArray_get(h, i)))

@@ -8,16 +8,16 @@
 MAINF__
 {
 	SET_DDARGS__;
-	if (daHasch(da, "yo"))
+	if (ddArgs_has_cstring(da, "yo"))
 	{
-		chPrintL("yo yo yo");
+		ddPrint_cstring("yo yo yo");
 	}
 
 	ddFColor dfc = make_ddFColor(255, 255 ,0);
 	ddBColor dbc = make_ddBColor(0, 0, 255);
-	dsPrint(dfc.color);
-	dsPrint(dbc.color);
-	chPrint("YOYO\n");
+	ddPrint_ddString(dfc.color);
+	ddPrint_ddString(dbc.color);
+	ddPrint_cstring_nl("YOYO");
 
 	return 0;
 }

@@ -12,11 +12,11 @@ MAINF__
 	int v;
 	run
 	oBLOCK
-		if (daHasch(da, "yo"))
+		if (ddArgs_has_cstring(da, "yo"))
 		{
 			leave(1);
 		}
-		if (daHasch(da, "bro"))
+		if (ddArgs_has_cstring(da, "bro"))
 		{
 			leave(2);
 		}
@@ -24,15 +24,15 @@ MAINF__
 	cBLOCK
 	end(1)
 	{
-		chPrintL("yoyoyoyoyoyoyoyoyoyoyo");
+		ddPrint_cstring_nl("yoyoyoyoyoyoyoyoyoyoyo");
 	}
 	end(2)
 	{
-		chPrintL("whats up brooo");
+		ddPrint_cstring_nl("whats up brooo");
 	}
 	end(3)
 	{
-		chPrintL("YOU GONNA SAY SOMETHING BRO!?!");
+		ddPrint_cstring_nl("YOU GONNA SAY SOMETHING BRO!?!");
 	}
 	return 0;
 }

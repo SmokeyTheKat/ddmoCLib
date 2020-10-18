@@ -6,7 +6,6 @@
 #include <ddcCursor.h>
 #include <ddcPrint.h>
 #include <ddcMath.h>
-#include <ddcMap.h>
 #include <ddcCharSets.h>
 #include <ddcLine.h>
 
