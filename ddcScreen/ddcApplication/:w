@@ -31,7 +31,6 @@ ddApplication init_ddApplication(ddString _name, ddColor _fgc, ddColor _bgc);
 void exit_ddApplication(ddApplication* _da);
 void run_ddApplication(ddApplication* _da);
 void loop_ddApplication(ddApplication* _da, void (*f)(ddApplication*));
-bool ddApplication_get_input(void);
 
 ddText make_ddText(ddString _text, ddVec2 _pos, ddColor _fgc, ddColor _bgc);
 void raze_ddText(ddText* _dt);

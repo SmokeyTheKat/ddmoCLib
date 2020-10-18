@@ -9,7 +9,8 @@ typedef enum DODelete DODelete;
 enum DOStatus { DOS_INACTIVE=0, DOS_ACTIVE, DOS_DELETED };
 enum DODelete { DOD_MANUAL=0, DOD_AUTO };
 
-void void__(void) { return; };
+void __VOID__(void) { return; };
+void __VOID_INT__(int __p_none) { return; };
 
 
 #ifndef lambda

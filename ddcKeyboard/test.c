@@ -7,7 +7,7 @@
 
 MAINF__
 {
-	intPrint(ddGetKey());
+	ddPrint_int_nl(ddKey_getch());
 
 	return 0;
 }

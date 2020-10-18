@@ -11,14 +11,16 @@ int main(void)
 	int i = 5;
 	bool b = true;
 
+	ddString ds = make_constant_ddString("yo");
 
-	dga_push(&h, i, int);
-	dga_push(&h, b, bool);
 
-	if (dga_get(h, 1, bool))
-		intPrint(dga_get(h, 0, int));
+	ddGArray_push(&h, i);
+	ddGArray_push(&h, b);
+	ddGArray_push(&h, ds);
 
-	chPrintL("");
+	if (ddGArray_get(h, 1, bool))
+		ddPrint_ddString_nl(ddGArray_get(h, 2, ddString));
+
 
 	
 	raze_ddGArray(&h);

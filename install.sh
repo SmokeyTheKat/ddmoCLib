@@ -7,6 +7,7 @@ cp ./ddcPrint/ddcPrint.h /usr/include/
 cp ./ddcNLoops/ddcNLoops.h /usr/include/
 cp ./ddcTime/ddcTime.h /usr/include/
 cp ./ddcGArray/ddcGArray.h /usr/include/
+cp ./ddcKeyboard/ddcKeyboard.h /usr/include/
 cp ./ddcVec/ddcVec.h /usr/include/
 cp ./ddcMath/ddcMath.h /usr/include/
 cp ./ddcCharSets/ddcCharSets.h /usr/include/

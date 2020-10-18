@@ -21,9 +21,9 @@ struct ddSquare
 };
 
 ddSquare make_ddSquare(ddVec2 _pos, ddVec2 _size, const char* _ch);
-ddSquare make_ddSquarePoints(ddVec2 _pos1, ddVec2 _pos2, const char* _ch);
+ddSquare make_ddSquare_points(ddVec2 _pos1, ddVec2 _pos2, const char* _ch);
 void draw_ddSquare(ddSquare _dsq);
-void drawOutline_ddSquare(ddSquare _dsq);
+void draw_outline_ddSquare(ddSquare _dsq);
 
 
 
@@ -35,7 +35,7 @@ ddSquare make_ddSquare(ddVec2 _pos, ddVec2 _size, const char* _ch)
 	_o.chr = _ch;
 	return _o;
 }
-ddSquare make_ddSquarePoints(ddVec2 _pos1, ddVec2 _pos2, const char* _ch)
+ddSquare make_ddSquare_points(ddVec2 _pos1, ddVec2 _pos2, const char* _ch)
 {
 	ddSquare _o;
 	_o.position = _pos1;
@@ -67,7 +67,7 @@ void draw_ddSquare(ddSquare _dsq)
 		}
 	}
 }
-void drawOutline_ddSquare(ddSquare _dsq)
+void draw_outline_ddSquare(ddSquare _dsq)
 {
 	draw_thick_line_points(make_ddVec2(_dsq.position.x, _dsq.position.y),
 			make_ddVec2(_dsq.position.x+_dsq.size.x-1, _dsq.position.y), _dsq.chr);
