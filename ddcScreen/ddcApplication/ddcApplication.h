@@ -15,12 +15,14 @@ struct ddApplication;
 struct ddSelect;
 struct ddPanel;
 struct ddText;
+struct ddEventSystem;
 
 
 typedef struct ddApplication ddApplication;
 typedef struct ddSelect ddSelect;
 typedef struct ddPanel ddPanel;
 typedef struct ddText ddText;
+typedef struct ddEventSystem ddEventSystem;
 
 typedef enum ddaTextAlign ddaTextAlign;
 typedef enum ddAppDrawingElems ddAppDrawingElems;
@@ -31,7 +33,11 @@ ddApplication init_ddApplication(ddString _name, ddColor _fgc, ddColor _bgc);
 void exit_ddApplication(ddApplication* _da);
 void run_ddApplication(ddApplication* _da);
 void loop_ddApplication(ddApplication* _da, void (*f)(ddApplication*));
+void ddApplication_clear_selected(ddApplication* _da);
 bool ddApplication_get_input(void);
+void ddApplication_update_selected(ddApplication* _da);
+void ddApplication_increment_element_selected(ddApplication* _da, int _dv);
+void ddApplication_event_onClick(ddApplication* _da);
 
 ddText make_ddText(ddString _text, ddVec2 _pos, ddColor _fgc, ddColor _bgc);
 void raze_ddText(ddText* _dt);
@@ -43,8 +49,18 @@ void draw_ddPanel(ddPanel _dp);
 
 ddSelect make_ddSelect(ddVec2 _pos, ddVec2 _size, ddText _title, ddColor _bgc, ddsize _ds, ddColor _sbc);
 void raze_ddSelect(ddSelect* _ds);
+bool ddSelect_addOption(ddSelect* _ds, ddText _dt, void (*_func)(int));
 void draw_ddSelect(ddSelect _ds);
+void draw_ddSelect_selected(ddSelect _ds);
+void clear_ddSelect_selected(ddSelect _ds);
 
+
+struct ddEventSystem
+{
+	void (*onClick)(int);
+	void (*onSpace)(int);
+	void (*onSelect)(int);
+};
 
 struct ddApplication
 {
@@ -54,6 +70,8 @@ struct ddApplication
 	ddGArray drawStack;
 	ddAppDrawingElems* drawStackElems;
 	ddsize drawStackLength;
+
+	int selected;
 
 	ddColor BGColor;
 	ddColor FGColor;
@@ -67,6 +85,7 @@ struct ddText
 	ddColor BGColor;
 
 	ddaTextAlign textAlign;
+	bool selectable;
 
 	DOStatus status;
 };
@@ -80,6 +99,7 @@ struct ddPanel
 
 	ddSquare element;
 	ddText title;
+	bool selectable;
 
 	ddColor BGColor;
 	ddColor FGColor;
@@ -89,10 +109,12 @@ struct ddSelect
 {
 	ddPanel panel;
 
-	void (**onSelect)(int);
+	void (**onClick)(int);
 	ddText* options;
 	ddsize optionsLength;
 	ddsize optionsSize;
+	int selected;
+	bool selectable;
 
 	ddColor selectedBGColor;
 
@@ -114,6 +136,8 @@ ddApplication init_ddApplication(ddString _name, ddColor _fgc, ddColor _bgc)
 	//_o.drawStackElems = make(ddAppDrawingElems, 10);
 	_o.drawStackLength = 10;
 
+	_o.selected = 0;
+
 	_o.BGColor = _bgc;
 	_o.FGColor = _fgc;
 
@@ -129,6 +153,7 @@ void exit_ddApplication(ddApplication* _da)
 }
 void run_ddApplication(ddApplication* _da)
 {
+	ddApplication_update_selected(_da);
 	for(;;)
 	{
 		cursor_clear();
@@ -160,7 +185,142 @@ void run_ddApplication(ddApplication* _da)
 		}
 		for(;;)
 		{
-			ddApplication_get_input();
+			ddKeyInfo dk = ddKey_getch();
+			if (dk == DDK_TAB)
+			{
+				ddApplication_clear_selected(_da);
+				_da->selected++;
+				ddApplication_update_selected(_da);
+			}
+			if (dk == DDK_LEFT)
+			{
+				ddApplication_clear_selected(_da);
+				_da->selected--;
+				ddApplication_update_selected(_da);
+			}
+			if (dk == DDK_RIGHT)
+			{
+				ddApplication_clear_selected(_da);
+				_da->selected++;
+				ddApplication_update_selected(_da);
+			}
+			if (dk == DDK_DOWN)
+			{
+				ddApplication_clear_selected(_da);
+				ddApplication_increment_element_selected(_da, 1);
+				ddApplication_update_selected(_da);
+			}
+			if (dk == DDK_UP)
+			{
+				ddApplication_clear_selected(_da);
+				ddApplication_increment_element_selected(_da, -1);
+				ddApplication_update_selected(_da);
+			}
+			if (dk == DDK_RETURN)
+			{
+				ddApplication_event_onClick(_da);
+			}
+		}
+	}
+}
+void ddApplication_event_onClick(ddApplication* _da)
+{
+	switch (_da->drawStackElems[_da->selected])
+	{
+		case DDAE_DDSELECT:
+		{
+			ddSelect* _t = ddGArray_get_p(_da->drawStack, _da->selected, ddSelect);
+			(*(_t->onClick[_t->selected]))(_t->selected);
+			break;
+		}
+		case DDAE_DDPANEL:
+		{
+			break;
+		}
+		case DDAE_DDTEXT:
+		{
+			break;
+		}
+		case DDAE_DDLINE:
+		{
+			break;
+		}
+	}
+
+}
+void ddApplication_increment_element_selected(ddApplication* _da, int _dv)
+{
+	switch (_da->drawStackElems[_da->selected])
+	{
+		case DDAE_DDSELECT:
+		{
+			ddSelect* _t = ddGArray_get_p(_da->drawStack, _da->selected, ddSelect);
+			if (_t->selectable)
+			{
+				_t->selected+=_dv;
+			}
+			break;
+		}
+		case DDAE_DDPANEL:
+		{
+			break;
+		}
+		case DDAE_DDTEXT:
+		{
+			break;
+		}
+		case DDAE_DDLINE:
+		{
+			break;
+		}
+	}
+}
+void ddApplication_clear_selected(ddApplication* _da)
+{
+	switch (_da->drawStackElems[_da->selected])
+	{
+		case DDAE_DDSELECT:
+		{
+			ddSelect _t = ddGArray_get(_da->drawStack, _da->selected, ddSelect);
+			if (_t.selectable) clear_ddSelect_selected(_t);
+			break;
+		}
+		case DDAE_DDPANEL:
+		{
+			break;
+		}
+		case DDAE_DDTEXT:
+		{
+			break;
+		}
+		case DDAE_DDLINE:
+		{
+			break;
+		}
+	}
+
+}
+void ddApplication_update_selected(ddApplication* _da)
+{
+	switch (_da->drawStackElems[_da->selected])
+	{
+		case DDAE_DDSELECT:
+		{
+			ddSelect _t = ddGArray_get(_da->drawStack, _da->selected, ddSelect);
+			if (_t.selectable) draw_ddSelect_selected(_t);
+			break;
+		}
+		case DDAE_DDPANEL:
+		{
+			break;
+		}
+		case DDAE_DDTEXT:
+		{
+			break;
+		}
+		case DDAE_DDLINE:
+		{
+			break;
 		}
 	}
 }
@@ -300,8 +460,10 @@ ddSelect make_ddSelect(ddVec2 _pos, ddVec2 _size, ddText _title, ddColor _bgc, d
 	_o.panel = make_ddPanel(_pos, _size, _title, _bgc);
 	_o.optionsSize = _ds;
 	_o.options = make(ddText, _ds);
-	_o.onSelect = calloc(_ds, sizeof(void (*)(int)) );
+	_o.onClick = calloc(_ds, sizeof(void (*)(int)) );
 	_o.optionsLength = 0;
+	_o.selected = 0;
+	_o.selectable = false;
 	_o.selectedBGColor = _sbc;
 	_o.status = DOS_ACTIVE;
 	return _o;
@@ -315,7 +477,7 @@ void raze_ddSelect(ddSelect* _ds)
 			raze_ddText(&(_ds->options[i]));
 		}
 		raze(_ds->options);
-		raze(_ds->onSelect);
+		raze(_ds->onClick);
 	}
 	_ds->status = DOS_DELETED;
 }
@@ -324,9 +486,11 @@ bool ddSelect_addOption(ddSelect* _ds, ddText _dt, void (*_func)(int))
 	if (_ds->status == DOS_DELETED) return false;
 	if (_ds->optionsLength+1 > _ds->optionsSize)
 		return false; 
+
+	_ds->selectable = true;
 	
 	_ds->options[_ds->optionsLength] = _dt;
-	_ds->onSelect[_ds->optionsLength] = _func;
+	_ds->onClick[_ds->optionsLength] = _func;
 
 	_ds->optionsLength++;
 	return true;
@@ -343,6 +507,24 @@ void draw_ddSelect(ddSelect _ds)
 		_ds.options[i].position.y = _ds.panel.position.y+1+i;
 		draw_ddText(_ds.options[i]);
 	}
+	cursor_colorPop();
+}
+void draw_ddSelect_selected(ddSelect _ds)
+{
+	//draw_ddSelect(_ds);
+	ddColor _t = _ds.options[_ds.selected].BGColor;
+	_ds.options[_ds.selected].BGColor = _ds.selectedBGColor;
+	
+	draw_ddText(_ds.options[_ds.selected]);
+	_ds.options[_ds.selected].BGColor = _t;
+}
+void clear_ddSelect_selected(ddSelect _ds)
+{
+	cursor_colorPush();
+	//draw_ddSelect(_ds);
+	cursor_setBGColor(_ds.panel.BGColor);
+	cursor_setFGColor(_ds.panel.FGColor);
+	draw_ddText(_ds.options[_ds.selected]);
 	cursor_colorPop();
 }
 

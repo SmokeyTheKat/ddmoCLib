@@ -11,6 +11,7 @@ void runf(int v)
 	cursor_push();
 	cursor_moveTo(0,50);
 	cursor_chWrite("OMG");
+	ddPrint_int(v);
 	cursor_pop();
 }
 
@@ -88,15 +89,15 @@ MAINF__
 	ddSelect ds1 = make_ddSelect(make_ddVec2(2,1),
 					      make_ddVec2(30,20),
 					      make_dft_ddText(make_constant_ddString("RED")),
-					      make_ddColor(255,0,0), 5, make_ddColor(0,0,255));
+					      make_ddColor(255,0,0), 5, make_ddColor(0,255,255));
 	ddSelect ds2 = make_ddSelect(make_ddVec2(34,1),
 					      make_ddVec2(30,20),
 					      make_dft_ddText(make_constant_ddString("GREEN")),
-					      make_ddColor(0,255,0), 5, make_ddColor(0,0,255));
+					      make_ddColor(0,255,0), 5, make_ddColor(255,0,255));
 	ddSelect ds3 = make_ddSelect(make_ddVec2(66,1),
 					      make_ddVec2(30,20),
 					      make_dft_ddText(make_constant_ddString("BLUE")),
-					      make_ddColor(0,0,255), 5, make_ddColor(0,0,255));
+					      make_ddColor(0,0,255), 5, make_ddColor(255,255,0));
 	ddSelect ds4 = make_ddSelect(make_ddVec2(98,1),
 					      make_ddVec2(30,20),
 					      make_dft_ddText(make_constant_ddString("YELLOW")),
@@ -104,13 +105,13 @@ MAINF__
 	ddSelect ds5 = make_ddSelect(make_ddVec2(130,1),
 					      make_ddVec2(30,20),
 					      make_dft_ddText(make_constant_ddString("AQUA")),
-					      make_ddColor(0,255,255), 5, make_ddColor(0,0,255));
+					      make_ddColor(0,255,255), 5, make_ddColor(255,0,0));
 
 	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("pick me yo")), runf);
-	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("no pick me")), __VOID_INT__);
-	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("yo")), __VOID_INT__);
-	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("omg")), __VOID_INT__);
-	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("BAHAHAHA")), __VOID_INT__);
+	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("no pick me")), runf);
+	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("yo")), runf);
+	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("omg")), runf);
+	ddSelect_addOption(&ds1, make_dft_ddText(make_ddString("BAHAHAHA")), runf);
 
 	ddSelect_addOption(&ds2, make_dft_ddText(make_ddString("pick me yo")), __VOID_INT__);
 	ddSelect_addOption(&ds2, make_dft_ddText(make_ddString("no pick me")), __VOID_INT__);
@@ -148,7 +149,6 @@ MAINF__
 	//ddGArray_push(&(da.drawStack), ds5);
 	//da.drawStackElems[4] = DDAE_DDSELECT;
 
-
 /*
 	draw_ddSelect(ds1);
 	draw_ddSelect(ds2);
@@ -157,10 +157,10 @@ MAINF__
 	draw_ddSelect(ds5);
 */
 
-	run_ddApplication(&da);
 
 	//loop_ddApplication(&da, loop);
 
+	run_ddApplication(&da);
 
 	cursor_moveTo(0,40);
 

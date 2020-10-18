@@ -6,6 +6,8 @@
 #include <stdio.h>
 
 #define ddGArray_get(h, i, t) (*((t*)__ddGArray_get(h, i)))
+#define ddGArray_get_pointer(h, i, t) ((t*)__ddGArray_get(h, i))
+#define ddGArray_get_p(h, i, t) ((t*)__ddGArray_get(h, i))
 #define ddGArray_set(h, v, i) __ddGArray_set(h, (void*)(&v), i)
 #define ddGArray_push(h, v) __ddGArray_push(h, (void*)(&v))
 
@@ -38,7 +40,7 @@ void raze_ddGArray(ddGArray* _h)
 {
 	raze(_h->val);
 }
-bool __ddGARray_set(ddGArray* _h, void* _v, ddsize _i)
+bool __ddGArray_set(ddGArray* _h, void* _v, ddsize _i)
 {
 	if (_i > _h->capacity)
 		return false;
