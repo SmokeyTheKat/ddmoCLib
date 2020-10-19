@@ -27,7 +27,7 @@ typedef struct ddEventSystem ddEventSystem;
 typedef enum ddaTextAlign ddaTextAlign;
 typedef enum ddAppDrawingElems ddAppDrawingElems;
 enum ddaTextAlign { ALIGN_LEFT=0, ALIGN_CENTER, ALIGN_RIGHT };
-enum ddAppDrawingElems { DDAE_NONE=0, DDAE_DDSELECT, DDAE_DDPANEL, DDAE_DDTEXT, DDAE_DDLINE };
+enum ddAppDrawingElems { DDAE_NONE=0, DDAE_GRAPHICSFUNCTION, DDAE_DDSELECT, DDAE_DDPANEL, DDAE_DDTEXT, DDAE_DDLINE };
 
 ddApplication init_ddApplication(ddString _name, ddColor _fgc, ddColor _bgc);
 void exit_ddApplication(ddApplication* _da);
@@ -180,6 +180,11 @@ void run_ddApplication(ddApplication* _da)
 				{
 					draw_thick_line(ddGArray_get(_da->drawStack, i, ddLine), cset_block);
 					break;
+				}
+				case DDAE_GRAPHICSFUNCTION:
+				{
+					void(*_tfunct)(void) = __ddGArray_get(_da->drawStack, i);
+					(*_tfunct)();
 				}
 			}
 		}

@@ -15,3 +15,4 @@ cp ./ddcScreen/ddcCursor/ddcCursor.h /usr/include/
 cp ./ddcScreen/ddcColors/ddcColors.h /usr/include/
 cp ./ddcScreen/ddcShapes/ddcShapes.h /usr/include/
 cp ./ddcScreen/ddcLine/ddcLine.h /usr/include/
+cp ./ddcScreen/ddcApplication/ddcApplication.h /usr/include/
