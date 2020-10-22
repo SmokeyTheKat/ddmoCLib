@@ -158,13 +158,13 @@ MAINF__
 */
 
 
-	//loop_ddApplication(&da, loop);
+	loop_ddApplication(&da, loop);
 
-	run_ddApplication(&da);
+	//run_ddApplication(&da);
 
 	cursor_moveTo(0,40);
 
-	exit_ddApplication(&da);
+	//exit_ddApplication(&da);
 
 	raze_ddSelect(&ds1);
 	raze_ddSelect(&ds2);

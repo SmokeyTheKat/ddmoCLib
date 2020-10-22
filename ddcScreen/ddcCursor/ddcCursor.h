@@ -95,7 +95,7 @@ void cursor_move(int x, int y)
 		{
 			ddPrint_cstring("\x1b[");
 			ddPrint_int(ddMath_abs(x));
-			ddPrint_cstring("N");
+			ddPrint_cstring("D");
 		}
 		else
 		{
