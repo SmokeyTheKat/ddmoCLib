@@ -40,6 +40,7 @@ void ddString_push_cstring_back(ddString* _d, const char* _ch);
 void ddString_push_cstring_front(ddString* _d, const char* _ch);
 void ddString_push_char_back(ddString* _d, const char _c);
 void ddString_push_char_front(ddString* _d, const char _c);
+int ddString_to_int(const ddString _ds);
 
 static int __floatTdsCount(int number, int count);
 void cstring_get_length(const char* _c, ddsize* _l);
@@ -468,5 +469,16 @@ void raze_auto_ddString(ddString* _d)
 		raze_ddString(_d);
 }
 
+int ddString_to_int(const ddString _ds)
+{
+	char* st = _ds.cstr;
+	int out = 0;
+	int sign = 1 - ((*st == 45)*2);
+	while(*st)
+	{
+		out = (out*10) + (*st++ - 48);
+	}
+	return out * sign;
+}
 
 #endif
