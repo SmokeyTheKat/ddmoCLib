@@ -12,6 +12,7 @@ enum ddStringTypes { DDSTRING_DYNAMIC=0, DDSTRING_CONSTANT, DDSTRING_STATIC };
 ddString make_ddString(const char* _c);
 ddString make_auto_ddString(const char* _c);
 ddString make_constant_ddString(const char* _c);
+const ddString make_full_constant_ddString(const char* _c);
 ddString make_empty_ddString();
 ddString make_multi_ddString(const ddString _c, ddsize _n);
 ddString make_multi_ddString_cstring(const char* _c, ddsize _n);
@@ -142,6 +143,18 @@ bool ddString_compare(const ddString _d, const ddString _s)
 		return false;
 	for (ddsize i = 0; i < _d.length; i++)
 		if (_d.cstr[i] != _s.cstr[i])
+			return false;
+	return true;
+}
+
+bool ddString_compare_cstring(const ddString _d, const char* _s)
+{
+	ddsize _len;
+	cstring_get_length(_s, &_len);
+	if (_d.length != _len)
+		return false;
+	for (ddsize i = 0; i < _d.length; i++)
+		if (_d.cstr[i] != _s[i])
 			return false;
 	return true;
 }
@@ -341,6 +354,22 @@ void remake_ddString(ddString* _ds, const char* _c)
 	*_ds = make_ddString(_c);
 }
 ddString make_constant_ddString(const char* _c)
+{
+	ddString _o;
+	ddsize _len = 0;
+	cstring_get_length(_c, &_len);
+	_o.length = _len;
+	_o.capacity = _len + __BYINC;
+
+	_o.cstr = (char*)_c;
+	
+	_o.status = DOS_ACTIVE;
+	_o.aDelete = DOD_MANUAL;
+	_o.type = DDSTRING_CONSTANT;
+
+	return _o;
+}
+const ddString make_full_constant_ddString(const char* _c)
 {
 	ddString _o;
 	ddsize _len = 0;

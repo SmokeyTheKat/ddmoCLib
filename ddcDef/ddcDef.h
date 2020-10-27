@@ -21,13 +21,14 @@ void __VOID_INT__(int __p_none) { return; };
 	&amp;lambda$__anon$;\
 	})
 	#endif
-
+/*
 #ifndef run
 	int __RUN_ERROR = 0;
 	#define run __RUN_ERROR = -1;
 	#define end(x) __EXIT_JMP_##x:if(__RUN_ERROR==x)
 	#define leave(x) __RUN_ERROR=x;goto __EXIT_JMP_##x;
 	#endif
+*/
 
 #ifndef make(t,s)
 	#define make(t,s) ((t*)malloc(s*sizeof(t)))
