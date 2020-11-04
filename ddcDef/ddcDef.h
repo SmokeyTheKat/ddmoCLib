@@ -12,6 +12,17 @@ enum DODelete { DOD_MANUAL=0, DOD_AUTO };
 void __VOID__(void) { return; };
 void __VOID_INT__(int __p_none) { return; };
 
+//ints
+typedef signed char             int8t;
+typedef signed int              int16t;
+typedef signed long int         int32t;
+typedef signed long long int    int64t;
+typedef unsigned char           uint8t;
+typedef unsigned int            uint16t;
+typedef unsigned long int       uint32t;
+typedef unsigned long long int  uint64t;
+typedef unsigned long long int  sizet;
+
 
 #ifndef lambda
 	#define lambda(lambda$_ret, lambda$_args, lambda$_body)\

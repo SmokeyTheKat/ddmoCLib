@@ -476,6 +476,11 @@ int ddString_to_int(const ddString _ds)
 	int sign = 1 - ((*st == 45)*2);
 	while(*st)
 	{
+		if (!(*st >= 48 && *st <=57))
+		{
+			st++;
+			continue;
+		}
 		out = (out*10) + (*st++ - 48);
 	}
 	return out * sign;
