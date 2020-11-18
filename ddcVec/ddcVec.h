@@ -1,8 +1,8 @@
 #ifndef __ddVec__
 #define __ddVec__
 
-#include <math.h>
 #include <ddcDef.h>
+#include <math.h>
 
 typedef struct ddVec2 ddVec2;
 typedef struct ddIVec2 ddIVec2;
