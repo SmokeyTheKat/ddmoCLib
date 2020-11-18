@@ -1,2 +1,4 @@
+CHEADERS = $(shell find ./* -type f -name '*.h')
+
 all:
-	sudo sh install.sh
+	sudo cp $(CHEADERS) /usr/include/
