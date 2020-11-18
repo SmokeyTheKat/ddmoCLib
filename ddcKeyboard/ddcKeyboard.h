@@ -17,7 +17,7 @@ enum ddKeyInfo { DDK_a=97,DDK_b,DDK_c,DDK_d,DDK_e,DDK_f,DDK_g,DDK_h,DDK_i,DDK_j,
 		 DDK_OPENCURLYBRACKET=123,DDK_BAR,DDK_CLOSECURLYBRACKET,DDK_TILDE,DDK_DELETE,
 		 DDK_UP=500,DDK_DOWN,DDK_LEFT,DDK_RIGHT,
 		 DDK_ESCAPE=27,
-		 DDK_TAB=9,DDK_RETURN=10,DDK_ENTER=10 };
+		 DDK_BACKSPACE=127,DDK_TAB=9,DDK_RETURN=10,DDK_ENTER=10 };
 
 static bool __has_escape;
 static bool __is_escaped;
@@ -72,6 +72,22 @@ ddKeyInfo ddKey_getch(void)
 			return DDK_LEFT;
 		else return c;
 	}
+	return c;
+}
+
+ddKeyInfo ddKey_getch_noesc(void)
+{
+	termios oldt;
+	tcgetattr(STDIN_FILENO, &oldt);
+	termios newt = oldt;
+	newt.c_lflag &= ~(ICANON | ECHO);
+	newt.c_cc[VMIN] = 1;
+	newt.c_cc[VTIME] = 0;
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+	unsigned char c;
+	ssize_t nread = read(STDIN_FILENO, &c, 1);
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
 	return c;
 }
 
