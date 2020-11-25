@@ -11,5 +11,6 @@
 int main(ddsize agsc, char** ags)
 {
 	ddPrint_cstring_nl("YO");
+	ddPrintf("%c%d%s", 'a', 52, " is blue");
 	return 0;
 }

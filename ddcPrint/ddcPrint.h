@@ -9,6 +9,7 @@
 
 
 void __ddPrint(const void* _v, const ddsize _len);
+void ddPrintf(const char* _ch, ...);
 void ddPrint_cstring(const char* _ch);
 void ddPrint_cstring_nl(const char* _ch);
 
@@ -58,7 +59,42 @@ void __ddPrint(const void* _v, const ddsize _len)
 
 }
 
-
+#include <stdarg.h>
+void ddPrintf(const char* _ch, ...)
+{
+	va_list ap;
+	va_start(ap, _ch);
+	ddsize _len;
+	cstring_get_length(_ch, &_len);
+	for (int i = 0; i < _len; i++)
+	{
+		switch (_ch[i])
+		{
+			case '%':
+			{
+				switch (_ch[i+1])
+				{
+					case 'd':
+						ddPrint_int(va_arg(ap, int));
+						i++;
+						break;
+					case 'c':
+						ddPrint_char(va_arg(ap, int));
+						i++;
+						break;
+					case 's':
+						ddPrint_cstring(va_arg(ap, char*));
+						i++;
+						break;
+				}
+				break;
+			}
+			default: ddPrint_char(_ch[i]); break;
+				
+		}
+	}
+	va_end(ap);
+}
 
 void ddPrint_char(const char _c)
 {
