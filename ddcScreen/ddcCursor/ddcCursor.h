@@ -143,7 +143,7 @@ bool cursor_pop(void)
 		{
 			ddVec2_set(&g_cursorPosition, __cursorPositionStack[i]);
 			ddVec2_set(&__cursorPositionStack[i], __v2empty);
-			cursor_move_to_vec(g_cursorPosition);
+			cursor_move_to(g_cursorPosition.x-1, g_cursorPosition.y-1);
 			return true;
 		}
 	}
