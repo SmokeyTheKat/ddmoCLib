@@ -9,8 +9,8 @@
 void runf(int v)
 {
 	cursor_push();
-	cursor_moveTo(0,50);
-	cursor_chWrite("OMG");
+	cursor_move_to(0,50);
+	cursor_write_cstring("OMG");
 	ddPrint_int(v);
 	cursor_pop();
 }
@@ -23,11 +23,11 @@ bool linet;
 
 void loop(ddApplication* da)
 {
-	cursor_colorPush();
+	cursor_color_push();
 	draw_ddSquare(make_ddSquare_points(make_ddVec2(85-((int)(sqs/2)), 20-((int)(sqs/4))),
 					    make_ddVec2(85+((int)(sqs/2)), 20+((int)(sqs/4))), cset_block));
 	
-	cursor_setFGColor(dcc);
+	cursor_set_fg_color(dcc);
 	if (linet)
 		draw_thick_line_points(p1, p2, cset_block);
 	else
@@ -70,7 +70,7 @@ void loop(ddApplication* da)
 		sqs-=2;
 
 	//ddApplication_get_input();
-	cursor_colorPop();
+	cursor_color_pop();
 }
 
 MAINF__
@@ -162,7 +162,7 @@ MAINF__
 
 	//run_ddApplication(&da);
 
-	cursor_moveTo(0,40);
+	cursor_move_to(0,40);
 
 	//exit_ddApplication(&da);
 

@@ -22,35 +22,33 @@ static ddColor __cursorFGStack[__CURSOR_STACK_LENGTH];
 static ddColor __cursorBGStack[__CURSOR_STACK_LENGTH];
 
 void init_cursor(void);
-void cursor_moveTo(int x, int y);
-void cursor_moveToVec(ddVec2 v);
+void cursor_move_to(int x, int y);
+void cursor_move_to_vec(ddVec2 v);
 void cursor_move(int x, int y);
-void cursor_moveVec(ddVec2 v);
-void cursor_moveUp(void);
-void cursor_moveDown(void);
-void cursor_moveLeft(void);
-void cursor_moveRight(void);
+void cursor_move_vec(ddVec2 v);
+void cursor_move_up(void);
+void cursor_move_down(void);
+void cursor_move_left(void);
+void cursor_move_right(void);
 void cursor_return(void);
 void cursor_home(void);
-void cursor_deleteLine(void);
+void cursor_delete_line(void);
 bool cursor_pop(void);
 bool cursor_push(void);
-void cursor_chWrite(const char* ch);
-void cursor_dsWrite(const ddString ds);
-void cursor_chWriteLine(const char* ch);
-void cursor_dsWriteLine(const ddString ds);
+void cursor_write_char(char c);
+void cursor_write_cstring(const char* ch);
+void cursor_write_ddString(const ddString ds);
+void cursor_write_nl(char c);
+void cursor_write_char_nl(char c);
+void cursor_write_cstring_nl(const char* ch);
+void cursor_write_ddString_nl(const ddString ds);
 void cursor_clear(void);
-void cursor_setFGColor(ddColor dc);
-void cursor_setFGColorRGB(int r, int g, int b);
-void cursor_setBGColor(ddColor dc);
-void cursor_setBGColorRGB(int r, int g, int b);
-bool cursor_colorPush(void);
-bool cursor_colorPop(void);
-
-#define cursor_dsWriteL cursor_dsWriteLine
-#define cursor_chWriteL cursor_chWriteLine
-
-
+void cursor_set_fg_color(ddColor dc);
+void cursor_set_fg_color_rgb(int r, int g, int b);
+void cursor_set_bg_color(ddColor dc);
+void cursor_set_bg_color_rgb(int r, int g, int b);
+bool cursor_color_push(void);
+bool cursor_color_pop(void);
 
 void init_cursor(void)
 {
@@ -67,21 +65,17 @@ void init_cursor(void)
 }
 
 
-void cursor_moveTo(int x, int y)
+void cursor_move_to(int x, int y)
 {
 	x++;
 	y++;
 	g_cursorPosition.x = x;
 	g_cursorPosition.y = y;
-	ddPrint_cstring("\x1b[");
-	ddPrint_int(y);
-	ddPrint_cstring(";");
-	ddPrint_int(x);
-	ddPrint_cstring("H");
+	ddPrintf("\x1b[%d;%dH", y, x);
 }
-void cursor_moveToVec(ddVec2 v)
+void cursor_move_to_vec(ddVec2 v)
 {
-	cursor_moveTo(v.x, v.y);
+	cursor_move_to(v.x, v.y);
 }
 void cursor_move(int x, int y)
 {
@@ -92,58 +86,38 @@ void cursor_move(int x, int y)
 	if (x != 0)
 	{
 		if (dx == -1)
-		{
-			ddPrint_cstring("\x1b[");
-			ddPrint_int(ddMath_abs(x));
-			ddPrint_cstring("D");
-		}
+			ddPrintf("\x1b[%dD", ddMath_abs(x));
 		else
-		{
-			ddPrint_cstring("\x1b[");
-			ddPrint_int(x);
-			ddPrint_cstring("C");
-
-		}
-
+			ddPrintf("\x1b[%dC", x);
 	}
 	if (y != 0)
 	{
 		if (dy == -1)
-		{
-			ddPrint_cstring("\x1b[");
-			ddPrint_int(ddMath_abs(y));
-			ddPrint_cstring("A");
-		}
+			ddPrintf("\x1b[%dA", ddMath_abs(y));
 		else
-		{
-			ddPrint_cstring("\x1b[");
-			ddPrint_int(y);
-			ddPrint_cstring("B");
-
-		}
-
+			ddPrintf("\x1b[%dB", y);
 	}
 }
-void cursor_moveVec(ddVec2 v)
+void cursor_move_vec(ddVec2 v)
 {
 	cursor_move(v.x, v.y);
 }
-void cursor_moveUp(void)
+void cursor_move_up(void)
 {
 	ddPrint_cstring("\x1b[A");
 	g_cursorPosition.y++;
 }
-void cursor_moveDown(void)
+void cursor_move_down(void)
 {
 	ddPrint_cstring("\x1b[B");
 	g_cursorPosition.y--;
 }
-void cursor_moveLeft(void)
+void cursor_move_left(void)
 {
 	ddPrint_cstring("\x1b[D");
 	g_cursorPosition.x--;
 }
-void cursor_moveRight(void)
+void cursor_move_right(void)
 {
 	ddPrint_cstring("\x1b[C");
 	g_cursorPosition.x++;
@@ -155,9 +129,9 @@ void cursor_return(void)
 }
 void cursor_home(void)
 {
-	cursor_moveTo(0, 0);
+	cursor_move_to(0, 0);
 }
-void cursor_deleteLine(void)
+void cursor_delete_line(void)
 {
 	ddPrint_cstring("\x1b[2K");
 }
@@ -169,7 +143,7 @@ bool cursor_pop(void)
 		{
 			ddVec2_set(&g_cursorPosition, __cursorPositionStack[i]);
 			ddVec2_set(&__cursorPositionStack[i], __v2empty);
-			cursor_moveToVec(g_cursorPosition);
+			cursor_move_to_vec(g_cursorPosition);
 			return true;
 		}
 	}
@@ -187,19 +161,30 @@ bool cursor_push(void)
 	}
 	return false;
 }
-void cursor_chWrite(const char* ch)
+void cursor_write_char(char c)
+{
+	ddPrint_char(c);
+	g_cursorPosition.x++;
+}
+void cursor_write_cstring(const char* ch)
 {
 	ddsize _len;
 	cstring_get_length(ch, &_len);
 	__ddPrint(ch, _len);
 	g_cursorPosition.x += _len;
 }
-void cursor_dsWrite(const ddString ds)
+void cursor_write_ddString(const ddString ds)
 {
 	ddPrint_ddString(ds);
 	g_cursorPosition.x += ds.length;
 }
-void cursor_chWriteLine(const char* ch)
+void cursor_write_char_nl(char c)
+{
+	ddPrint_char_nl(c);
+	g_cursorPosition.x = 0;
+	g_cursorPosition.y++;
+}
+void cursor_write_cstring_nl(const char* ch)
 {
 	ddsize _len;
 	cstring_get_length(ch, &_len);
@@ -208,7 +193,7 @@ void cursor_chWriteLine(const char* ch)
 	g_cursorPosition.y++;
 	g_cursorPosition.x = 0;
 }
-void cursor_dsWriteLine(const ddString ds)
+void cursor_write_ddString_nl(const ddString ds)
 {
 	ddPrint_ddString(ds);
 	ddPrint_nl();
@@ -217,8 +202,8 @@ void cursor_dsWriteLine(const ddString ds)
 }
 void cursor_clear(void)
 {
-	cursor_moveTo(g_consoleWidth, g_consoleHeight);
-	cursor_setBGColor(g_cursorBGColor);
+	cursor_move_to(g_consoleWidth, g_consoleHeight);
+	cursor_set_bg_color(g_cursorBGColor);
 	ddPrint_cstring("\x1b[1J");
 	ddPrint_cstring("\x1b[0;0H");
 	g_cursorPosition.x = 0;
@@ -226,7 +211,7 @@ void cursor_clear(void)
 }
 
 
-void cursor_setFGColorRGB(int r, int g, int b)
+void cursor_set_fg_color_rgb(int r, int g, int b)
 {
 	if (r < 0 && g < 0 && b < 0)
 		return;
@@ -235,12 +220,12 @@ void cursor_setFGColorRGB(int r, int g, int b)
 	ddPrint_ddString(dfc.color);
 	raze_ddFColor(&dfc);
 }
-void cursor_setFGColor(ddColor dc)
+void cursor_set_fg_color(ddColor dc)
 {
-	 cursor_setFGColorRGB(dc.r, dc.g, dc.b);
+	 cursor_set_fg_color_rgb(dc.r, dc.g, dc.b);
 }
 
-void cursor_setBGColorRGB(int r, int g, int b)
+void cursor_set_bg_color_rgb(int r, int g, int b)
 {
 	if (r < 0 && g < 0 && b < 0)
 		return;
@@ -249,18 +234,18 @@ void cursor_setBGColorRGB(int r, int g, int b)
 	ddPrint_ddString(dbc.color);
 	raze_ddBColor(&dbc);
 }
-void cursor_setBGColor(ddColor dc)
+void cursor_set_bg_color(ddColor dc)
 {
-	cursor_setBGColorRGB(dc.r, dc.g, dc.b);
+	cursor_set_bg_color_rgb(dc.r, dc.g, dc.b);
 }
-bool cursor_colorPop(void)
+bool cursor_color_pop(void)
 {
 	for (int i = __CURSOR_STACK_LENGTH - 1; i >= 0; i--)
 	{
 		if (__cursorFGStack[i].g != 420)
 		{
-			cursor_setFGColor(__cursorFGStack[i]);
-			cursor_setBGColor(__cursorBGStack[i]);
+			cursor_set_fg_color(__cursorFGStack[i]);
+			cursor_set_bg_color(__cursorBGStack[i]);
 			__cursorFGStack[i].g = 420;
 			__cursorBGStack[i].g = 420;
 			return true;
@@ -268,7 +253,7 @@ bool cursor_colorPop(void)
 	}
 	return false;
 }
-bool cursor_colorPush(void)
+bool cursor_color_push(void)
 {
 	for (int i = 0; i < __CURSOR_STACK_LENGTH; i++)
 	{

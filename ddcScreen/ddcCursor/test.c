@@ -13,36 +13,9 @@ MAINF__
 
 	init_cursor();
 	cursor_clear();
-
-	//cursor_setBColorRGB(255, 255, 255);
-	cursor_setFGColorRGB(0, 0, 0);
-
-	int inc = 3;
-
-yo:
-
-	for (int i = 0; i < 170; i += inc)
-	{
-		for (int j = 0; j < 170; j += inc)
-		{
-			for (int k = 0; k < 170; k += inc)
-			{
-				cursor_setFGColorRGB((int)ddMath_map(i, 0, 170, 0, 255),
-							(int)ddMath_map(j, 0, 170, 0, 255),
-							(int)ddMath_map(k, 0, 170, 0, 255));
-				//cursor_setBColorRGB((int)ddMath_map(k, 0, 170, 0, 255),
-			//				(int)ddMath_map(i, 0, 170, 0, 255),
-			//				(int)ddMath_map(j, 0, 170, 0, 255));
-				ddPrint_cstring(cset_block); 
-				usleep(100);
-			}
-		}
-	}
-goto yo;
-	for(;;);
-
-	//cursor_chWrite("YO");
-	ddPrint_nl();
-
+	cursor_move_to(0, 0);
+	ddPrint_cstring("0");
+	cursor_move_to(1, 1);
+	ddPrint_cstring("1");
 	return 0;
 }

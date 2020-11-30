@@ -33,7 +33,7 @@ MAINF__
 	for (ddsize i = 0; i < len; i++)
 		time += timea[i];
 	time /= len;
-	cursor_moveTo(0,37);
+	cursor_move_to(0,37);
 	ddPrint_double(time);
 
 	
@@ -53,14 +53,14 @@ MAINF__
 	for (ddsize i = 0; i < len; i++)
 		time += timea[i];
 	time /= len;
-	cursor_moveTo(0,38);
+	cursor_move_to(0,38);
 	ddPrint_double(time);
 
 
 	raze(timea);
 
 
-	cursor_moveTo(0, 40);
+	cursor_move_to(0, 40);
 
 
 	return 0;

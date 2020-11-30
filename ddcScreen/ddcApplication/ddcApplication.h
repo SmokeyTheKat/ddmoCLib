@@ -384,15 +384,15 @@ void raze_ddText(ddText* _dt)
 }
 void draw_ddText(ddText _dt)
 {
-	cursor_colorPush();
+	cursor_color_push();
 	if (_dt.textAlign == ALIGN_LEFT)
 	{
-		cursor_setFGColor(_dt.FGColor);
-		cursor_setBGColor(_dt.BGColor);
-		cursor_moveToVec(_dt.position);
-		cursor_dsWrite(_dt.text);
+		cursor_set_fg_color(_dt.FGColor);
+		cursor_set_bg_color(_dt.BGColor);
+		cursor_move_to_vec(_dt.position);
+		cursor_write_ddString(_dt.text);
 	}
-	cursor_colorPop();
+	cursor_color_pop();
 }
 
 
@@ -420,9 +420,9 @@ void raze_ddPanel(ddPanel* _ds)
 }
 void draw_ddPanel(ddPanel _ds)
 {
-	cursor_colorPush();
-	cursor_setFGColor(make_ddColor(0,0,0));
-	cursor_setBGColor(_ds.BGColor);
+	cursor_color_push();
+	cursor_set_fg_color(make_ddColor(0,0,0));
+	cursor_set_bg_color(_ds.BGColor);
 	draw_ddSquare(_ds.element);
 
 	draw_thick_line_points(_ds.position, make_ddVec2(_ds.position.x+_ds.size.x-1, _ds.position.y), cset_horizontalBar);
@@ -432,30 +432,30 @@ void draw_ddPanel(ddPanel _ds)
 	draw_thick_line_points(make_ddVec2(_ds.position.x+_ds.size.x-1, _ds.position.y+_ds.size.y-1),
 					make_ddVec2(_ds.position.x, _ds.position.y+_ds.size.y-1), cset_horizontalBar);
 
-	cursor_moveToVec(_ds.position);
-	cursor_chWrite(cset_upRightBar);
+	cursor_move_to_vec(_ds.position);
+	cursor_write_cstring(cset_upRightBar);
 
-	cursor_moveTo(_ds.position.x+_ds.size.x-1, _ds.position.y);
-	cursor_chWrite(cset_upLeftBar);
+	cursor_move_to(_ds.position.x+_ds.size.x-1, _ds.position.y);
+	cursor_write_cstring(cset_upLeftBar);
 
-	cursor_moveTo(_ds.position.x, _ds.position.y+_ds.size.y-1);
-	cursor_chWrite(cset_downRightBar);
+	cursor_move_to(_ds.position.x, _ds.position.y+_ds.size.y-1);
+	cursor_write_cstring(cset_downRightBar);
 
-	cursor_moveTo(_ds.position.x+_ds.size.x-1, _ds.position.y+_ds.size.y-1);
-	cursor_chWrite(cset_downLeftBar);
+	cursor_move_to(_ds.position.x+_ds.size.x-1, _ds.position.y+_ds.size.y-1);
+	cursor_write_cstring(cset_downLeftBar);
 
 
 	_ds.title.position = make_ddVec2((_ds.position.x+((int)(_ds.size.x/2)))-((int)(_ds.title.text.length/2)), (_ds.position.y));
 	draw_ddText(_ds.title);
 
-	cursor_moveTo(((_ds.position.x+((int)(_ds.size.x/2)))-((int)(_ds.title.text.length/2)))-1, _ds.position.y);
-	cursor_chWrite(cset_rightStopBar);
+	cursor_move_to(((_ds.position.x+((int)(_ds.size.x/2)))-((int)(_ds.title.text.length/2)))-1, _ds.position.y);
+	cursor_write_cstring(cset_rightStopBar);
 
-	cursor_moveTo(((_ds.position.x+((int)(_ds.size.x/2)))-((int)(_ds.title.text.length/2)))+_ds.title.text.length, _ds.position.y);
-	cursor_chWrite(cset_leftStopBar);
+	cursor_move_to(((_ds.position.x+((int)(_ds.size.x/2)))-((int)(_ds.title.text.length/2)))+_ds.title.text.length, _ds.position.y);
+	cursor_write_cstring(cset_leftStopBar);
 
 
-	cursor_colorPop();
+	cursor_color_pop();
 }
 
 
@@ -502,17 +502,17 @@ bool ddSelect_addOption(ddSelect* _ds, ddText _dt, void (*_func)(int))
 }
 void draw_ddSelect(ddSelect _ds)
 {
-	cursor_colorPush();
+	cursor_color_push();
 	draw_ddPanel(_ds.panel);
-	cursor_setBGColor(_ds.panel.BGColor);
-	cursor_setFGColor(_ds.panel.FGColor);
+	cursor_set_bg_color(_ds.panel.BGColor);
+	cursor_set_fg_color(_ds.panel.FGColor);
 	for (int i = 0; i < _ds.optionsLength; i++)
 	{
 		_ds.options[i].position.x = _ds.panel.position.x+1;
 		_ds.options[i].position.y = _ds.panel.position.y+1+i;
 		draw_ddText(_ds.options[i]);
 	}
-	cursor_colorPop();
+	cursor_color_pop();
 }
 void draw_ddSelect_selected(ddSelect _ds)
 {
@@ -525,12 +525,12 @@ void draw_ddSelect_selected(ddSelect _ds)
 }
 void clear_ddSelect_selected(ddSelect _ds)
 {
-	cursor_colorPush();
+	cursor_color_push();
 	//draw_ddSelect(_ds);
-	cursor_setBGColor(_ds.panel.BGColor);
-	cursor_setFGColor(_ds.panel.FGColor);
+	cursor_set_bg_color(_ds.panel.BGColor);
+	cursor_set_fg_color(_ds.panel.FGColor);
 	draw_ddText(_ds.options[_ds.selected]);
-	cursor_colorPop();
+	cursor_color_pop();
 }
 
 

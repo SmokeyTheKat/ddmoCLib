@@ -16,7 +16,7 @@ struct ddSquare
 {
 	ddVec2 position;
 	ddVec2 size;
-	char* chr;
+	const char* chr;
 };
 
 ddSquare make_ddSquare(ddVec2 _pos, ddVec2 _size, const char* _ch);
@@ -59,10 +59,10 @@ void draw_ddSquare(ddSquare _dsq)
 {
 	for (int i = 0; i < _dsq.size.y; i++)
 	{
-		cursor_moveTo(_dsq.position.x, _dsq.position.y+i);
+		cursor_move_to(_dsq.position.x, _dsq.position.y+i);
 		for (int j = 0; j < _dsq.size.x; j++)
 		{
-			cursor_chWrite(_dsq.chr);
+			cursor_write_cstring(_dsq.chr);
 		}
 	}
 }

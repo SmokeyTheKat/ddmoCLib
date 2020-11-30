@@ -58,8 +58,8 @@ void draw_thick_line(ddLine dl, const char* ch)
 	int c[2]            = { ci[0], ci[1] };
 	int po[2]           = { dl.p1.x, dl.p1.y };
 	int i               = 0;
-	cursor_moveTo(po[0], po[1]);
-	cursor_chWrite(ch);
+	cursor_move_to(po[0], po[1]);
+	cursor_write_cstring(ch);
 	switch (i < td)
 	{
 		case 1:
@@ -69,8 +69,8 @@ void draw_thick_line(ddLine dl, const char* ch)
 				int v = (c[0]>c[1])+(c[0]==c[1]);
 				c[v] += ci[v];
 				po[v] += d[v];
-				cursor_moveTo(po[0], po[1]);
-				cursor_chWrite(ch);
+				cursor_move_to(po[0], po[1]);
+				cursor_write_cstring(ch);
 				i++;
 			} while (i < td);
 		}
@@ -86,8 +86,8 @@ void draw_thin_line(ddLine dl, const char* ch)
 	int c[2]            = { ci[0], ci[1] };
 	int po[2]           = { dl.p1.x, dl.p1.y };
 	int i               = 0;
-	cursor_moveTo(po[0], po[1]);
-	cursor_chWrite(ch);
+	cursor_move_to(po[0], po[1]);
+	cursor_write_cstring(ch);
 	switch (i < td)
 	{
 		case 1:
@@ -102,8 +102,8 @@ void draw_thin_line(ddLine dl, const char* ch)
 				c[!v] += z*ci[!v];
 				po[!v] += z*d[!v];
 
-				cursor_moveTo(po[0], po[1]);
-				cursor_chWrite(ch);
+				cursor_move_to(po[0], po[1]);
+				cursor_write_cstring(ch);
 				i++;
 			} while (i < td);
 		}
@@ -126,8 +126,8 @@ void dl2h(ddLine dl, const char* ch)
 	for (int y = dl.p1.y; y < dl.p2.y; x++)
 	{
 		i++;
-		cursor_moveTo(x, y);
-		cursor_chWrite(ch);
+		cursor_move_to(x, y);
+		cursor_write_cstring(ch);
 		if (D > 0)
 		{
 			x += xi;
@@ -153,8 +153,8 @@ void dl2l(ddLine dl, const char* ch)
 	for (int x = dl.p1.x; x < dl.p2.x; x++)
 	{
 		i++;
-		cursor_moveTo(x, y);
-		cursor_chWrite(ch);
+		cursor_move_to(x, y);
+		cursor_write_cstring(ch);
 		if (D > 0)
 		{
 			y += yi;
