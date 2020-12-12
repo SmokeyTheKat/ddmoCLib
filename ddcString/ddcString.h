@@ -2,6 +2,7 @@
 #define __ddcString__
 
 #include "ddcDef.h"
+#include <stdarg.h>
 
 typedef struct ddString ddString;
 
@@ -10,6 +11,7 @@ enum ddStringTypes { DDSTRING_DYNAMIC=0, DDSTRING_CONSTANT, DDSTRING_STATIC };
 
 
 ddString make_ddString(const char* _c);
+ddString make_format_ddString_length(const char* _c, ...);
 ddString make_ddString_length(const char* _c, ddsize _l);
 ddString make_auto_ddString(const char* _c);
 ddString make_constant_ddString(const char* _c);
@@ -25,6 +27,7 @@ void raze_auto_ddString(ddString* _d);
 void raze_constant_ddString(ddString* _d);
 ddString int_to_ddString(int _v, ddString _ds);
 ddString float_to_ddString(float _f, ddString _ds);
+void ddString_format(ddString* _ds, const char* _fmt, ...);
 void ddString_empty(ddString* _ds);
 void ddString_make_constant(ddString* _ds);
 void ddString_resize(ddString* _d, ddsize _nl);
@@ -40,6 +43,9 @@ void ddString_push_cstring_back(ddString* _d, const char* _ch);
 void ddString_push_cstring_front(ddString* _d, const char* _ch);
 void ddString_push_char_back(ddString* _d, const char _c);
 void ddString_push_char_front(ddString* _d, const char _c);
+void ddString_insert_char_at(ddString* _d, char _c, ddsize _i);
+void ddString_delete_at(ddString* _d, ddsize i);
+void ddString_pop_back(ddString* _d, ddsize _n);
 int ddString_to_int(const ddString _ds);
 
 static int __floatTdsCount(int number, int count);
@@ -106,8 +112,90 @@ bool cstring_compare(const char* _d, const char* _s)
 }
 
 
+ddString make_format_ddString(const char* _fmt, ...)
+{
+	ddString _ds = make_ddString("");
+	_ds.length = 0;
+	va_list ap;
+	va_start(ap, _fmt);
+	ddsize _len;
+	cstring_get_length(_fmt, &_len);
+	for (int i = 0; i < _len; i++)
+	{
+		switch (_fmt[i])
+		{
+			case '%':
+			{
+				switch (_fmt[i+1])
+				{
+					case 'd':
+					{
+						ddString vint = make_ddString_from_int(va_arg(ap, int));
+						ddString_push_back(&_ds, vint);
+						raze_ddString(&vint);
+						i++;
+						break;
+					}
+					case 'c':
+						ddString_push_char_back(&_ds, va_arg(ap, int));
+						i++;
+						break;
+					case 's':
+						ddString_push_cstring_back(&_ds, va_arg(ap, char*));
+						i++;
+						break;
+				}
+				break;
+			}
+			default: ddString_push_char_back(&_ds, _fmt[i]); break;
+				
+		}
+	}
+	va_end(ap);
+	return _ds;
+}
 
 
+void ddString_format(ddString* _ds, const char* _fmt, ...)
+{
+	_ds->length = 0;
+	va_list ap;
+	va_start(ap, _ds);
+	ddsize _len;
+	cstring_get_length(_fmt, &_len);
+	for (int i = 0; i < _len; i++)
+	{
+		switch (_fmt[i])
+		{
+			case '%':
+			{
+				switch (_fmt[i+1])
+				{
+					case 'd':
+					{
+						ddString vint = make_ddString_from_int(va_arg(ap, int));
+						ddString_push_back(_ds, vint);
+						raze_ddString(&vint);
+						i++;
+						break;
+					}
+					case 'c':
+						ddString_push_char_back(_ds, va_arg(ap, int));
+						i++;
+						break;
+					case 's':
+						ddString_push_cstring_back(_ds, va_arg(ap, char*));
+						i++;
+						break;
+				}
+				break;
+			}
+			default: ddString_push_char_back(_ds, _fmt[i]); break;
+				
+		}
+	}
+	va_end(ap);
+}
 
 void ddString_copy(ddString* _d, const ddString _s)
 {
@@ -485,5 +573,34 @@ int ddString_to_int(const ddString _ds)
 	}
 	return out * sign;
 }
+
+void ddString_delete_at(ddString* _d, ddsize i)
+{
+	for (; i < _d->length; i++)
+	{
+		_d->cstr[i] = _d->cstr[i+1];
+	}
+	_d->length--;
+}
+
+void ddString_insert_char_at(ddString* _d, char _c, ddsize _i)
+{
+	for (ddsize i = _d->length; i > _i; i--)
+	{
+		_d->cstr[i] = _d->cstr[i-1];
+	}
+	_d->cstr[_i] = _c;
+	_d->length++;
+}
+
+void ddString_pop_back(ddString* _d, ddsize _n)
+{
+	for (ddsize i = 1; i < _n+1; i++)
+	{
+		_d->cstr[_d->length-i] = '\0';
+	}
+	_d->length -= _n;
+}
+
 
 #endif
