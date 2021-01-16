@@ -47,6 +47,7 @@ void ddString_insert_char_at(ddString* _d, char _c, ddsize _i);
 void ddString_delete_at(ddString* _d, ddsize i);
 void ddString_pop_back(ddString* _d, ddsize _n);
 int ddString_to_int(const ddString _ds);
+void ddString_close(ddString _d);
 
 static int __floatTdsCount(int number, int count);
 void cstring_get_length(const char* _c, ddsize* _l);
@@ -128,6 +129,14 @@ ddString make_format_ddString(const char* _fmt, ...)
 			{
 				switch (_fmt[i+1])
 				{
+					case 'f':
+					{
+						ddString vfloat = make_ddString_from_float(va_arg(ap, double));
+						ddString_push_back(&_ds, vfloat);
+						raze_ddString(&vfloat);
+						i++;
+						break;
+					}
 					case 'd':
 					{
 						ddString vint = make_ddString_from_int(va_arg(ap, int));
@@ -152,6 +161,7 @@ ddString make_format_ddString(const char* _fmt, ...)
 		}
 	}
 	va_end(ap);
+	ddString_close(_ds);
 	return _ds;
 }
 
@@ -195,6 +205,7 @@ void ddString_format(ddString* _ds, const char* _fmt, ...)
 		}
 	}
 	va_end(ap);
+	ddString_close(*_ds);
 }
 
 void ddString_copy(ddString* _d, const ddString _s)
@@ -226,6 +237,7 @@ void ddString_add(ddString* _d, const ddString _s)
 	_d->cstr = _n;
 	_d->length += _s.length;
 	_d->status = DOS_ACTIVE;
+	ddString_close(*_d);
 }
 
 bool ddString_compare(const ddString _d, const ddString _s)
@@ -259,6 +271,7 @@ void ddString_push_cstring_back(ddString* _d, const char* _ch)
 	cstring_copy_offset(_d->cstr, _ch, _d->length, 0, _clen);
 	_d->length += _clen;
 	_d->status = DOS_ACTIVE;
+	ddString_close(*_d);
 }
 void ddString_push_back(ddString* _d, const ddString _s)
 {
@@ -267,6 +280,7 @@ void ddString_push_back(ddString* _d, const ddString _s)
 	cstring_copy_offset(_d->cstr, _s.cstr, _d->length, 0, _s.length);
 	_d->length += _s.length;
 	_d->status = DOS_ACTIVE;
+	ddString_close(*_d);
 }
 void ddString_push_char_back(ddString* _d, const char _c)
 {
@@ -275,6 +289,7 @@ void ddString_push_char_back(ddString* _d, const char _c)
 	_d->cstr[_d->length] = _c;
 	_d->length += 1;
 	_d->status = DOS_ACTIVE;
+	ddString_close(*_d);
 }
 
 
@@ -291,6 +306,7 @@ void ddString_push_cstring_front(ddString* _d, const char* _ch)
 	_d->length += _clen;
 	_d->cstr = _t;
 	_d->status = DOS_ACTIVE;
+	ddString_close(*_d);
 }
 void ddString_push_front(ddString* _d, const ddString _s)
 {
@@ -303,6 +319,7 @@ void ddString_push_front(ddString* _d, const ddString _s)
 	_d->length += _s.length;
 	_d->cstr = _t;
 	_d->status = DOS_ACTIVE;
+	ddString_close(*_d);
 }
 void ddString_push_char_front(ddString* _d, const char _c)
 {
@@ -315,6 +332,7 @@ void ddString_push_char_front(ddString* _d, const char _c)
 	_d->length += 1;
 	_d->cstr = _t;
 	_d->status = DOS_ACTIVE;
+	ddString_close(*_d);
 }
 
 ddString make_ddString_from_int(int _v)
@@ -495,6 +513,8 @@ ddString make_ddString_length(const char* _c, ddsize _l)
 	_o.cstr = make(char, _o.capacity);
 	cstring_copy(_o.cstr, _c, _o.length);
 
+	ddString_close(_o);
+
 	return _o;
 
 }
@@ -581,6 +601,7 @@ void ddString_delete_at(ddString* _d, ddsize i)
 		_d->cstr[i] = _d->cstr[i+1];
 	}
 	_d->length--;
+	ddString_close(*_d);
 }
 
 void ddString_insert_char_at(ddString* _d, char _c, ddsize _i)
@@ -591,6 +612,7 @@ void ddString_insert_char_at(ddString* _d, char _c, ddsize _i)
 	}
 	_d->cstr[_i] = _c;
 	_d->length++;
+	ddString_close(*_d);
 }
 
 void ddString_pop_back(ddString* _d, ddsize _n)
@@ -600,6 +622,12 @@ void ddString_pop_back(ddString* _d, ddsize _n)
 		_d->cstr[_d->length-i] = '\0';
 	}
 	_d->length -= _n;
+	ddString_close(*_d);
+}
+
+void ddString_close(ddString _d)
+{
+	_d.cstr[_d.length] = 0;
 }
 
 
