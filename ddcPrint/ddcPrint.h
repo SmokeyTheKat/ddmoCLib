@@ -74,6 +74,10 @@ void ddPrintf(const char* _ch, ...)
 			{
 				switch (_ch[i+1])
 				{
+					case 'f':
+						ddPrint_float(va_arg(ap, long double));
+						i++;
+						break;
 					case 'd':
 						ddPrint_int(va_arg(ap, int));
 						i++;
