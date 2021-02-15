@@ -3,21 +3,25 @@
 
 #include <stdarg.h>
 
+#ifndef __ddcLib_DStatus__
+#define __ddcLib_DStatus__
+
 #ifndef __BYINC
 	#define __BYINC 10
 	#endif
 
 typedef char bool;
 
-typedef struct ddString ddString;
-
-typedef enum ddStringTypes ddStringTypes;
-enum ddStringTypes { DDSTRING_DYNAMIC=0, DDSTRING_CONSTANT, DDSTRING_STATIC };
-
 typedef enum DOStatus DOStatus;
 typedef enum DODelete DODelete;
 enum DOStatus { DOS_INACTIVE=0, DOS_ACTIVE, DOS_DELETED };
 enum DODelete { DOD_MANUAL=0, DOD_AUTO };
+
+#endif
+
+typedef struct ddString ddString;
+typedef enum ddStringTypes ddStringTypes;
+enum ddStringTypes { DDSTRING_DYNAMIC=0, DDSTRING_CONSTANT, DDSTRING_STATIC };
 
 
 ddString make_ddString(const char* _c);

@@ -3,11 +3,15 @@
 
 #include <stdlib.h>
 
+#ifndef __ddcLib_DStatus__
+#define __ddcLib_DStatus__
 
 typedef enum DOStatus DOStatus;
 typedef enum DODelete DODelete;
 enum DOStatus { DOS_INACTIVE=0, DOS_ACTIVE, DOS_DELETED };
 enum DODelete { DOD_MANUAL=0, DOD_AUTO };
+
+#endif
 
 void __VOID__(void) { return; };
 void __VOID_INT__(int __p_none) { return; };
