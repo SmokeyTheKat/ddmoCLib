@@ -1,37 +1,180 @@
 #ifndef __ddcPrint__
 #define __ddcPrint__
 
-
-#include <ddcDef.h>
+#include <stdlib.h>
 #include <stdarg.h>
 
-#include <ddcString.h>
-
-
-void __ddPrint(const void* _v, const ddsize _len);
+void ddPrint(const void* vptr, const unsigned long length);
 void ddPrintf(const char* _ch, ...);
-void ddPrint_cstring(const char* _ch);
-void ddPrint_cstring_nl(const char* _ch);
-
-void ddPrint_char(const char _c);
-void ddPrint_char_nl(const char _c);
-
-void ddPrint_ddString(const ddString _ds);
-void ddPrint_ddString_nl(const ddString _ds);
-
-void ddPrint_int(const int _v);
-void ddPrint_int_nl(const int _v);
-
-void ddPrint_float(const float _v);
-void ddPrint_float_nl(const float _v);
-
-void ddPrint_double(const double _v);
-void ddPrint_double_nl(const double _v);
-
+void ddPrint_cstring(const char* cstr);
+void ddPrint_char(char chr);
+void ddPrint_int(long num);
+void ddPrint_float(float flt);
 void ddPrint_nl(void);
 
+void cursor_move(int x, int y);
+void cursor_move_to(int x, int y);
+void cursor_up(void);
+void cursor_down(void);
+void cursor_left(void);
+void cursor_right(void);
+void cursor_return(void);
+void cursor_erase_line(void);
+void cursor_clear(void);
+void cursor_save(void);
+void cursor_restore(void);
+void cursor_home(void);
+void cursor_up(void);
+void cursor_down(void);
+void cursor_left(void);
+void cursor_right(void);
+void cursor_style_bold(void);
+void cursor_style_dim(void);
+void cursor_style_italic(void);
+void cursor_style_underline(void);
+void cursor_style_slow_blink(void);
+void cursor_style_fast_blink(void);
+void cursor_style_invert(void);
+void cursor_style_dashed(void);
+void cursor_set_fg_color(int r, int g, int b);
+void cursor_set_bg_color(int r, int g, int b);
+void cursor_style_reset(void);
 
-void __ddPrint(const void* _v, const ddsize _len)
+static unsigned long  __ddcPrint_int_get_length(long num)
+{
+	if (num < 10)
+		return 1;
+	else if (num < 100)
+		return 2;
+	else if (num < 1000)
+		return 3;
+	else if (num < 10000)
+		return 4;
+	else if (num < 100000)
+		return 5;
+	else if (num < 1000000)
+		return 6;
+	else if (num < 10000000)
+		return 7;
+	else if (num < 100000000)
+		return 8;
+	else if (num < 1000000000)
+		return 9;
+	else if (num < 10000000000)
+		return 10;
+	else if (num < 100000000000)
+		return 11;
+	else if (num < 1000000000000)
+		return 12;
+}
+
+static long __ddcPrint_floatTCount(long n, long c)
+{
+    int _o = 1;
+    while(c-- > 0)
+        _o *= n;
+
+    return _o;
+}
+
+static char* __ddcPrint_float_to_cstring(float flt, unsigned long* output_len)
+{
+	long l1;
+	long l2;
+	long i;
+	long n1;
+	long pos;
+	long sign;
+	long double n2;
+
+	sign = -1;
+	if (flt < 0)
+	{
+		sign = '-';
+		flt *= -1;
+	}
+
+	n2 = flt;
+	n1 = flt;
+	l1 = 0;
+	l2 = 0;
+
+	while( (n2 - (float)n1) != 0.0 && !((n2 - (float)n1) < 0.0) )
+	{
+		n2 = flt * (__ddcPrint_floatTCount(10.0, l2 + 1));
+		n1 = n2;
+		l2++;
+	}
+
+	for (l1 = (flt > 1) ? 0 : 1; flt > 1; l1++)
+		flt /= 10;
+
+	pos = l1;
+	l1 = l1 + 1 + l2;
+	n1 = n2;
+	if (sign == '-')
+	{
+		l1++;
+		pos++;
+	}
+	
+	char* _o = malloc(l1+1);
+
+	for (i = l1; i >= 0 ; i--)
+	{
+		if (i == (l1))
+			_o[i] = '\0';
+		else if(i == (pos))
+			_o[i] = '.';
+		else if(sign == '-' && i == 0)
+			_o[i] = '-';
+		else
+		{
+			_o[i] = (n1 % 10) + '0';
+			n1 /= 10;
+		}
+	}
+	*output_len = l1;
+/*
+	if (_o.cstr[0] == '0' && _o.cstr[_o.length-1] == '.')
+	{
+		ddString_push_char_front(&_o, '1');
+	}
+*/
+	return _o;
+}
+static char* __ddcPrint_int_to_cstring(long num, unsigned long* out_length)
+{
+	char sign = '+';
+	if (num < 0)
+	{
+		sign = '-';
+		num *= -1;
+	}
+	unsigned long length = __ddcPrint_int_get_length(num)+1;
+	*out_length = length;
+	unsigned long ptr = length;
+	char* output = malloc(length+1);
+	if (num == 0)
+		output[1] = '0';
+	while (num)
+	{
+		int digit = num % 10;
+		num /= 10;
+		output[--ptr] = '0' + digit;
+	}
+	output[0] = sign;
+	output[length] = 0;
+	return output;
+}
+static unsigned long __ddcPrint_str_len(const char* cstr)
+{
+	unsigned long len = 0;
+	while (cstr[len++] != 0);
+	return len;
+}
+
+void ddPrint(const void* vptr, const unsigned long length)
 {
 #if __x86_64__
 	__asm__		(".intel_syntax;"
@@ -42,7 +185,7 @@ void __ddPrint(const void* _v, const ddsize _len)
 			 "syscall;"
 			 ".att_syntax;"
 			 :
-			 :"r"(_v), "r"(_len)
+			 :"r"(vptr), "r"(length)
 			 :"rsi", "rdx");
 #else
 	__asm__		(".intel_syntax;"
@@ -53,37 +196,68 @@ void __ddPrint(const void* _v, const ddsize _len)
 			 "syscall;"
 			 ".att_syntax;"
 			 :
-			 :"r"(_v), "r"(_len)
+			 :"r"(vptr), "r"(length)
 			 :"esi", "edx");
 #endif
 
 }
 
-#include <stdarg.h>
-void ddPrintf(const char* _ch, ...)
+void ddPrints(const char* cstr)
+{
+	unsigned long length = __ddcPrint_str_len(cstr);
+	ddPrint(cstr, length);
+}
+void ddPrint_cstring(const char* cstr)
+{
+	unsigned long length = __ddcPrint_str_len(cstr);
+	ddPrint(cstr, length);
+}
+void ddPrint_char(char chr)
+{
+	ddPrint(&chr, 1);
+}
+void ddPrint_int(long num)
+{ 
+	unsigned long length;
+	char* cstr = __ddcPrint_int_to_cstring(num, &length);
+	ddPrint(cstr, length);
+	free(cstr);
+}
+void ddPrint_float(float flt)
+{
+	unsigned long length;
+	char* cstr = __ddcPrint_float_to_cstring(flt, &length);
+	ddPrint(cstr, length);
+}
+void ddPrint_nl(void)
+{
+	char chr_nl = '\n';
+	ddPrint(&chr_nl, 1);
+}
+
+void ddPrintf(const char* cstr, ...)
 {
 	va_list ap;
-	va_start(ap, _ch);
-	ddsize _len;
-	cstring_get_length(_ch, &_len);
-	for (int i = 0; i < _len; i++)
+	va_start(ap, cstr);
+	unsigned long len = __ddcPrint_str_len(cstr);
+	for (int i = 0; i < len; i++)
 	{
-		switch (_ch[i])
+		switch (cstr[i])
 		{
 			case '%':
 			{
-				switch (_ch[i+1])
+				switch (cstr[i+1])
 				{
 					case 'f':
-						ddPrint_float(va_arg(ap, long double));
+						ddPrint_float(va_arg(ap, double));
 						i++;
 						break;
 					case 'd':
-						ddPrint_int(va_arg(ap, int));
+						ddPrint_int(va_arg(ap, long));
 						i++;
 						break;
 					case 'c':
-						ddPrint_char(va_arg(ap, int));
+						ddPrint_char(va_arg(ap, long));
 						i++;
 						break;
 					case 's':
@@ -93,115 +267,104 @@ void ddPrintf(const char* _ch, ...)
 				}
 				break;
 			}
-			default: ddPrint_char(_ch[i]); break;
+			default: ddPrint_char(cstr[i]); break;
 				
 		}
 	}
 	va_end(ap);
 }
 
-void ddPrint_char(const char _c)
+void cursor_move(int x, int y)
 {
-	__ddPrint(&_c, 1);
+	ddPrintf("\x1b[%dB\x1b[%dC", y, x);
 }
-
-void ddPrint_char_nl(const char _c)
+void cursor_move_to(int x, int y)
 {
-	ddPrint_char(_c);
-	ddPrint_char(DNL);
+	ddPrintf("\x1b[%d;%dH", y+1, x+1);
 }
-
-
-void ddPrint_nl(void)
+void cursor_return(void)
 {
-	ddPrint_char(DNL);
+	ddPrint_char('\r');
 }
-
-void ddPrint_int(const int _v)
+void cursor_erase_line(void)
 {
-	ddString _ds = make_ddString_from_int(_v);
-	ddPrint_ddString(_ds);
-	raze_ddString(&_ds);
+	ddPrint("\x1b[2K", 4);
 }
-void ddPrint_int_nl(const int _v)
+void cursor_clear(void)
 {
-	ddPrint_int(_v);
-	ddPrint_nl();
+	ddPrint("\x1b[2J", 4);
 }
-
-void ddPrint_float(const float _v)
+void cursor_save(void)
 {
-	ddString _ds = make_ddString_from_float(_v);
-	ddPrint_ddString(_ds);
-	raze_ddString(&_ds);
+	ddPrint("\x1b[s", 3);
 }
-void ddPrint_float_nl(const float _v)
+void cursor_restore(void)
 {
-	ddPrint_float(_v);
-	ddPrint_nl();
+	ddPrint("\x1b[u", 3);
 }
-
-void ddPrint_double(const double _v)
+void cursor_home(void)
 {
-	ddString _ds = make_ddString_from_float(_v);
-	ddPrint_ddString(_ds);
-	raze_ddString(&_ds);
+	cursor_move_to(0, 0);
 }
-void ddPrint_double_nl(const double _v)
+void cursor_up(void)
 {
-	ddPrint_double(_v);
-	ddPrint_nl();
+	ddPrint("\x1b[A", 3);
 }
-
-
-void ddPrint_cstring(const char* _ch)
+void cursor_down(void)
 {
-	ddsize _len;
-	cstring_get_length(_ch, &_len);
-	__ddPrint(_ch, _len);
+	ddPrint("\x1b[B", 3);
 }
-void ddPrint_cstring_nl(const char* _ch)
+void cursor_left(void)
 {
-	ddPrint_cstring(_ch);
-	ddPrint_nl();
+	ddPrint("\x1b[D", 3);
 }
-
-
-/*
-void chPrintC(ddsize _l, ...)
+void cursor_right(void)
 {
-	va_list arg;
-	va_start(arg, _l);
-	chPrint(va_arg(arg, const char*));
-	for (ddsize i = 2; i < _l+1; i++)
-		chPrint(va_arg(arg, const char*));
-	va_end(arg);
+	ddPrint("\x1b[C", 3);
 }
-*/
-
-void ddPrint_ddString(const ddString _ds)
+void cursor_style_bold(void)
 {
-	__ddPrint(_ds.cstr, _ds.length);
+	ddPrint("\x1b[1m", 4);
 }
-
-/*
-void dsPrintC(ddsize _l, ...)
+void cursor_style_dim(void)
 {
-	va_list arg;
-	va_start(arg, _l);
-	dsPrint(va_arg(arg, ddString));
-	for (ddsize i = 2; i < _l+1; i++)
-		dsPrint(va_arg(arg, ddString));
-	va_end(arg);
+	ddPrint("\x1b[2m", 4);
 }
-*/
-
-void ddPrint_ddString_nl(const ddString _ds)
+void cursor_style_italic(void)
 {
-	ddPrint_ddString(_ds);
-	ddPrint_nl();
+	ddPrint("\x1b[3m", 4);
 }
-
-
+void cursor_style_underline(void)
+{
+	ddPrint("\x1b[4m", 4);
+}
+void cursor_style_slow_blink(void)
+{
+	ddPrint("\x1b[5m", 4);
+}
+void cursor_style_fast_blink(void)
+{
+	ddPrint("\x1b[6m", 4);
+}
+void cursor_style_invert(void)
+{
+	ddPrint("\x1b[7m", 4);
+}
+void cursor_style_dashed(void)
+{
+	ddPrint("\x1b[9m", 4);
+}
+void cursor_set_fg_color(int r, int g, int b)
+{
+	ddPrintf("\x1b[38;2;%d;%d;%dm", r, g, b);
+}
+void cursor_set_bg_color(int r, int g, int b)
+{
+	ddPrintf("\x1b[48;2;%d;%d;%dm", r, g, b);
+}
+void cursor_style_reset(void)
+{
+	ddPrintf("\x1b[0m", 4);
+}
 
 #endif

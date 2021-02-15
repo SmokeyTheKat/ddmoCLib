@@ -1,7 +1,6 @@
 #ifndef __ddcTime__
 #define __ddcTime__
 
-#include <ddcDef.h>
 #include <time.h>
 
 #define ddTimer_time_statement(x,y,v) ddTimer_start();for (int i = 0; i < y; i++){x};v=ddTimer_stop();

@@ -1,11 +1,10 @@
 #ifndef __ddcMath__
 #define __ddcMath__
 
-#include <ddcDef.h>
 #include <math.h>
 
 double ddMath_abs(double n);
-ddsize ddMath_factorial(ddsize n);
+long ddMath_factorial(long n);
 double ddMath_sqrt(double n);
 double ddMath_sin(double n);
 double ddMath_map(double _v, double _l1, double _h1, double _l2, double _h2);
@@ -41,7 +40,7 @@ double ddMath_sqrt(double n)
 } 
 
 
-ddsize ddMath_factorial(ddsize n)
+long ddMath_factorial(long n)
 {
 	if (n == 0 || n == 1)
 		return 1;

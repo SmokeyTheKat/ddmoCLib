@@ -1,60 +1,65 @@
-#include <ddcDef.h>
-#include <ddcPrint.h>
-#include <ddcString.h>
-#include <ddcLine.h>
-#include <stdio.h>
+#ifndef __ddcGArray_h__
+#define __ddcGArray_h__
 
-#define ddGArray_get(h, i, t) (*((t*)__ddGArray_get(h, i)))
-#define ddGArray_get_pointer(h, i, t) ((t*)__ddGArray_get(h, i))
-#define ddGArray_get_p(h, i, t) ((t*)__ddGArray_get(h, i))
-#define ddGArray_set(h, v, i) __ddGArray_set(h, (void*)(&v), i)
-#define ddGArray_push(h, v) __ddGArray_push(h, (void*)(&v))
+#define gArray_get(h, i, t) (*((t*)__gArray_get(h, i)))
+#define gArray_get_pointer(h, i, t) ((t*)__gArray_get(h, i))
+#define gArray_get_p(h, i, t) ((t*)__gArray_get(h, i))
+#define gArray_set(h, v, i) __gArray_set(h, (void*)(&v), i)
+#define gArray_push(h, v) __gArray_push(h, (void*)(&v))
+#define gArray_pop(h, t) (*((t*)__gArray_pop(h)))
 
-typedef struct ddGArray ddGArray;
+typedef struct gArray gArray;
 
-ddGArray make_ddGArray(ddsize _len);
-void raze_ddGArray(ddGArray* _h);
+gArray make_gArray(unsigned long _len);
+void raze_gArray(gArray* _h);
 
-bool __ddGArray_set(ddGArray* _h, void* _v, ddsize _i);
-bool __ddGArray_push(ddGArray* _h, void* _v);
-void* __ddGArray_get(ddGArray _h, ddsize _i);
+bool __gArray_set(gArray* _h, void* _v, unsigned long _i);
+bool __gArray_push(gArray* _h, void* _v);
+void* __gArray_get(gArray _h, unsigned long _i);
 
 
-struct ddGArray
+struct gArray
 {
 	void** val;
-	ddsize length;
-	ddsize capacity;
+	unsigned long length;
+	unsigned long capacity;
 };
 
-ddGArray make_ddGArray(ddsize _len)
+gArray make_gArray(unsigned long _len)
 {
-	ddGArray _o;
-	_o.val = make(void, _len);
+	gArray _o;
+	_o.val = malloc(sizeof(void*)*_len);
 	_o.length = 0;
 	_o.capacity = _len;
 	return _o;
 }
-void raze_ddGArray(ddGArray* _h)
+void raze_gArray(gArray* _h)
 {
-	raze(_h->val);
+	free(_h->val);
 }
-bool __ddGArray_set(ddGArray* _h, void* _v, ddsize _i)
+bool __gArray_set(gArray* _h, void* _v, unsigned long _i)
 {
-	if (_i > _h->capacity)
-		return false;
+	if (_i > _h->length)
+		return 0;
 	_h->val[_i] = _v;
-	return true;
+	return 1;
 }
-bool __ddGArray_push(ddGArray* _h, void* _v)
+bool __gArray_push(gArray* _h, void* _v)
 {
-	if (_h->length + 1 > _h->capacity)
-		return false;
-	_h->val[_h->length] = _v;
-	_h->length++;
-	return true;
+	if (_h->length+1 > _h->capacity)
+		return 0;
+	_h->val[_h->length++] = _v;
+	return 1;
 }
-void* __ddGArray_get(ddGArray _h, ddsize _i)
+void* __gArray_pop(gArray* _h)
+{
+	if (_h->length == 0)
+		return (void*)0;
+	return _h->val[--(_h->length)];
+}
+void* __gArray_get(gArray _h, unsigned long _i)
 {
 	return _h.val[_i];
 }
+
+#endif

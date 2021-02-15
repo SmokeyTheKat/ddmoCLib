@@ -4,6 +4,7 @@
 const char* cset_lowerLetters = "abcdefghijklmnopqrstuvwxyz";
 const char* cset_upperLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const char* cset_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+const char* cset_numbers = "0123456789";
 
 const char* cset_block = "█";
 const char* cset_mediumBlock = "▒";

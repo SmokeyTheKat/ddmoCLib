@@ -1,49 +1,48 @@
 #ifndef __ddcNLoops__
 #define __ddcNLoops__
 
-#include <ddcDef.h>
 #include <math.h>
 
 typedef struct ddNLoop ddNLoop;
 
 struct ddNLoop
 {
-	ddsize loops;
-	ddsize totalLoops;
-	ddsize* loopLengths;
-	ddsize* itrs;
+	unsigned long loops;
+	unsigned long totalLoops;
+	unsigned long* loopLengths;
+	unsigned long* itrs;
 };
 
 
 
-ddNLoop init_ddNLoop(ddsize* _ll, ddsize _loops);
-void update_ddNLoop(ddNLoop _dnl, ddsize _i);
+ddNLoop init_ddNLoop(unsigned long* _ll, unsigned long _loops);
+void update_ddNLoop(ddNLoop _dnl, unsigned long _i);
 void raze_ddNLoop(ddNLoop _dnl);
 
-ddsize _getPeak(ddsize* xx, ddsize i);
-void _getItrs(ddsize v, ddsize* xx, ddsize b, ddsize y, ddsize i, ddsize* o);
+unsigned long _getPeak(unsigned long* xx, unsigned long i);
+void _getItrs(unsigned long v, unsigned long* xx, unsigned long b, unsigned long y, unsigned long i, unsigned long* o);
 
 
 
-ddNLoop init_ddNLoop(ddsize* _ll, ddsize _l)
+ddNLoop init_ddNLoop(unsigned long* _ll, unsigned long _l)
 {
 	ddNLoop _o;
 	_o.loops = _l;
 	_o.loopLengths = _ll;
 	_o.totalLoops = 1;
-	for (ddsize i = 0; i < _l; i++)
+	for (unsigned long i = 0; i < _l; i++)
 		_o.totalLoops *= _ll[i];
-	_o.itrs = make(ddsize, _l);
-	for (ddsize i = 0; i < _l; i++)
+	_o.itrs = malloc(sizeof(unsigned long)*_l);
+	for (unsigned long i = 0; i < _l; i++)
 		_o.itrs[i] = 0;
 	return _o;
 }
 void raze_ddNLoop(ddNLoop _dnl)
 {
-	raze(_dnl.itrs);
-	raze(_dnl.loopLengths);
+	free(_dnl.itrs);
+	free(_dnl.loopLengths);
 }
-void update_ddNLoop(ddNLoop _dnl, ddsize _i)
+void update_ddNLoop(ddNLoop _dnl, unsigned long _i)
 {
 	_getItrs(_i, _dnl.loopLengths, 0, _i, _dnl.loops, _dnl.itrs);
 }
@@ -56,16 +55,16 @@ void update_ddNLoop(ddNLoop _dnl, ddsize _i)
 
 
 
-ddsize _getPeak(ddsize* xx, ddsize i)
+unsigned long _getPeak(unsigned long* xx, unsigned long i)
 {
 	if (i-1 <= 1)
 		return xx[0];
 	int _t = 1;
-	for (ddsize j = 1; j < i; j++)
+	for (unsigned long j = 1; j < i; j++)
 		_t *= xx[j];
 	return _t;
 }
-void _getItrs(ddsize v, ddsize* xx, ddsize b, ddsize y, ddsize i, ddsize* o)
+void _getItrs(unsigned long v, unsigned long* xx, unsigned long b, unsigned long y, unsigned long i, unsigned long* o)
 {
 	if (i == 1)  b = y;
 	else         b = floor(y/(_getPeak(xx, i)));

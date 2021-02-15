@@ -1,30 +1,27 @@
 #ifndef __ddcLib_ddcMem_h__
 #define __ddcLib_ddcMem_h__
 
-#include <ddcDef.h>
+void mem_set(void* dest, int value, long length);
+void mem_copy(void* dest, const void* src, long length);
+void mem_copy_setp(void* dest, const void* src, long step, long length);
+void mem_copy_offset(void* dest, const void* src, long destOffset, long srcOffset, long length);
+void mem_copy_offset_step(void* dest, const void* src, long destOffset, long srcOffset, long step, long length);
+void mem_copy_step_offset(void* dest, const void* src, long destOffset, long srcOffset, long step, long stepOffset, long length);
 
-void ddMem_set(void* dest, int value, sizet length);
-void ddMem_copy(void* dest, const void* src, sizet length);
-void ddMem_copy_setp(void* dest, const void* src, sizet step, sizet length);
-void ddMem_copy_offset(void* dest, const void* src, sizet destOffset, sizet srcOffset, sizet length);
-void ddMem_copy_offset_step(void* dest, const void* src, sizet destOffset, sizet srcOffset, sizet step, sizet length);
-void ddMem_copy_step_offset(void* dest, const void* src, sizet destOffset, sizet srcOffset, sizet step, sizet stepOffset, sizet length);
-
-
-void ddMem_set(void* dest, int value, sizet length)
+void mem_set(void* dest, int value, long length)
 {
 	char* cdest = (char*)dest;
-	for (sizet i = 0; i < length; i++)
+	for (long i = 0; i < length; i++)
 	{
 		cdest[i] = value;
 	}
 }
 
-void ddMem_copy(void* dest, const void* src, sizet length)
+void mem_copy(void* dest, const void* src, long length)
 {
 	char* cdest = (char*)dest;
 	const char* csrc = (const char*)src;
-	for (sizet i = 0; i < length; i++)
+	for (long i = 0; i < length; i++)
 	{
 		*cdest = *csrc;
 		cdest++;
@@ -32,11 +29,11 @@ void ddMem_copy(void* dest, const void* src, sizet length)
 	}
 }
 
-void ddMem_copy_setp(void* dest, const void* src, sizet step, sizet length)
+void mem_copy_setp(void* dest, const void* src, long step, long length)
 {
 	char* cdest = (char*)dest;
 	const char* csrc = (const char*)src;
-	for (sizet i = 0; i < length; i+=step)
+	for (long i = 0; i < length; i+=step)
 	{
 		*cdest = *csrc;
 		cdest++;
@@ -44,26 +41,26 @@ void ddMem_copy_setp(void* dest, const void* src, sizet step, sizet length)
 	}
 }
 
-void ddMem_copy_offset(void* dest, const void* src, sizet destOffset, sizet srcOffset, sizet length)
+void mem_copy_offset(void* dest, const void* src, long destOffset, long srcOffset, long length)
 {
 	char* cdest = (char*)dest;
 	const char* csrc = (const char*)src;
 	cdest += destOffset;
 	csrc += srcOffset;
-	for (sizet i = 0; i < length; i++)
+	for (long i = 0; i < length; i++)
 	{
 		*cdest = *csrc;
 		cdest++;
 		csrc++;
 	}
 }
-void ddMem_copy_offset_step(void* dest, const void* src, sizet destOffset, sizet srcOffset, sizet step, sizet length)
+void mem_copy_offset_step(void* dest, const void* src, long destOffset, long srcOffset, long step, long length)
 {
 	char* cdest = (char*)dest;
 	const char* csrc = (const char*)src;
 	cdest += destOffset;
 	csrc += srcOffset;
-	for (sizet i = 0; i < length; i+=step)
+	for (long i = 0; i < length; i+=step)
 	{
 		*cdest = *csrc;
 		cdest++;
@@ -71,13 +68,13 @@ void ddMem_copy_offset_step(void* dest, const void* src, sizet destOffset, sizet
 	}
 }
 
-void ddMem_copy_step_offset(void* dest, const void* src, sizet destOffset, sizet srcOffset, sizet step, sizet stepOffset, sizet length)
+void mem_copy_step_offset(void* dest, const void* src, long destOffset, long srcOffset, long step, long stepOffset, long length)
 {
 	char* cdest = (char*)dest;
 	const char* csrc = (const char*)src;
 	cdest += destOffset;
 	csrc += srcOffset;
-	for (sizet i = stepOffset; i < length; i+=step)
+	for (long i = stepOffset; i < length; i+=step)
 	{
 		*cdest = *csrc;
 		cdest++;
