@@ -163,7 +163,13 @@ static char* __ddcPrint_int_to_cstring(long num, unsigned long* out_length)
 		num /= 10;
 		output[--ptr] = '0' + digit;
 	}
-	output[0] = sign;
+	if (sign == '-') output[0] = sign;
+	else
+	{
+		length--;
+		for (int i = 0; i < length; i++)
+			output[i] = output[i+1];
+	}
 	output[length] = 0;
 	return output;
 }

@@ -4,6 +4,8 @@
 #include <termios.h>
 #include <unistd.h>
 
+typedef char bool;
+
 typedef struct termios termios;
 typedef enum ddKeyInfo ddKeyInfo;
 
@@ -39,23 +41,23 @@ ddKeyInfo ddKey_getch(void)
 	{
 		if (__has_escape)
 			return '\x1b';
-		__has_escape = true;
+		__has_escape = 1;
 		ddKeyInfo dki = ddKey_getch();
-		__has_escape = false;
-		__is_escaped = false;
+		__has_escape = 0;
+		__is_escaped = 0;
 		return dki;
 	}
 	if (__has_escape) 
 	{
 		if (c == '[')
 		{
-			__is_escaped = true;
+			__is_escaped = 1;
 			return ddKey_getch();
 		}
 		else if (c == '\x1b')
 		{
-			__has_escape = false;
-			__is_escaped = false;
+			__has_escape = 0;
+			__is_escaped = 0;
 			return DDK_ESCAPE;
 		}
 			
