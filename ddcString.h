@@ -27,6 +27,7 @@ enum ddStringTypes { DDSTRING_DYNAMIC=0, DDSTRING_CONSTANT, DDSTRING_STATIC };
 ddString make_ddString(const char* _c);
 ddString make_format_ddString_length(const char* _c, ...);
 ddString make_ddString_length(const char* _c, unsigned long _l);
+ddString make_ddString_capacity(const char* _c, unsigned long _cap);
 ddString make_auto_ddString(const char* _c);
 ddString make_constant_ddString(const char* _c);
 const ddString make_full_constant_ddString(const char* _c);
@@ -68,6 +69,7 @@ void cstring_get_length(const char* _c, unsigned long* _l);
 void cstring_copy(char* _d, const char* _s, unsigned long _len);
 void cstring_copy_offset(char* _d, const char* _s, unsigned long _do, unsigned long _so, unsigned long _l);
 bool cstring_compare(const char* _d, const char* _s);
+bool cstring_compare_length(const char* _d, const char* _s, unsigned long);
 void __cstring_copy(char* _d, const char* _s, unsigned long _len);
 void __cstring_copy_offset(char* _d, const char* _s, unsigned long _do, unsigned long _so, unsigned long _l);
 bool __cstring_compare(const char* _d, const char* _s);
@@ -111,6 +113,14 @@ void cstring_copy_offset(char* _d, const char* _s, unsigned long _do, unsigned l
 		_d++;
 		_s++;
 	}
+}
+bool cstring_compare_length(const char* _d, const char* _s, unsigned long _l)
+{
+	for (unsigned long i = 0; i < _l && _d[i] && _s[i]; i++)
+	{
+		if (_d[i] != _s[i])  return 0;
+	}
+	return 1;
 }
 bool cstring_compare(const char* _d, const char* _s)
 {
@@ -514,6 +524,24 @@ const ddString make_full_constant_ddString(const char* _c)
 
 	return _o;
 }
+ddString make_ddString_capacity(const char* _c, unsigned long _cap)
+{
+	ddString _o;
+	unsigned long _len = 0;
+	cstring_get_length(_c, &_len);
+
+	_o.status = DOS_ACTIVE;
+	_o.aDelete = DOD_MANUAL;
+	_o.type = DDSTRING_DYNAMIC;
+
+	_o.length = _len;
+	_o.capacity = _cap;
+
+	_o.cstr = malloc(_o.capacity);
+	cstring_copy(_o.cstr, _c, _o.length);
+
+	return _o;
+}
 ddString make_ddString_length(const char* _c, unsigned long _l)
 {
 	ddString _o;
@@ -547,6 +575,8 @@ ddString make_ddString(const char* _c)
 
 	_o.cstr = malloc(_o.capacity);
 	cstring_copy(_o.cstr, _c, _o.length);
+
+	ddString_close(_o);
 
 	return _o;
 }
