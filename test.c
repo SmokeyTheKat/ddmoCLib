@@ -8,6 +8,7 @@
 #include "./ddcBits.h"
 #include "./ddcNLoops.h"
 #include "./ddcTime.h"
+#include "./ddcSocket.h"
 #include <stdio.h>
 
 int main(int argc, char** argv)
