@@ -3,6 +3,8 @@
 
 #include <stdlib.h>
 #include <stdarg.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 void ddPrint(const void* vptr, const unsigned long length);
 void ddPrintf(const char* _ch, ...);
@@ -12,6 +14,8 @@ void ddPrint_int(long num);
 void ddPrint_float(float flt);
 void ddPrint_nl(void);
 
+int cursor_get_width(void);
+int cursor_get_height(void);
 void cursor_move(int x, int y);
 void cursor_move_to(int x, int y);
 void cursor_up(void);
@@ -278,6 +282,19 @@ void ddPrintf(const char* cstr, ...)
 		}
 	}
 	va_end(ap);
+}
+
+int cursor_get_height(void)
+{
+	struct winsize w;
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	return w.ws_row;
+}
+int cursor_get_width(void)
+{
+	struct winsize w;
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	return w.ws_col;
 }
 
 void cursor_move(int x, int y)
