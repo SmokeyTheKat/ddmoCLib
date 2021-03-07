@@ -85,10 +85,6 @@ int dsocketServer_receive(struct dsocketServer sck, int client, char* buffer, lo
 	return 1;
 }
 
-
-
-
-
 struct dsocketClient make_dsocketClient(char* addr, int port)
 {
 	struct dsocketClient output;
