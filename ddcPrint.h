@@ -14,6 +14,9 @@ void ddPrint_int(long num);
 void ddPrint_float(float flt);
 void ddPrint_nl(void);
 
+void ddError(const char* _ch);
+void ddErrorf(const char* _ch, ...);
+
 int cursor_get_width(void);
 int cursor_get_height(void);
 void cursor_move(int x, int y);
@@ -281,6 +284,54 @@ void ddPrintf(const char* cstr, ...)
 				
 		}
 	}
+	va_end(ap);
+}
+
+void ddError(const char* cstr)
+{
+	ddPrints("\x1b[38;2;255;255;255m[\x1b[38;2;255;0;0mERROR\x1b[38;2;255;255;255m] ");
+	ddPrints(cstr);
+	ddPrint_nl();
+}
+
+void ddErrorf(const char* cstr, ...)
+{
+	ddPrints("\x1b[38;2;255;255;255m[\x1b[38;2;255;0;0mERROR\x1b[38;2;255;255;255m] ");
+	va_list ap;
+	va_start(ap, cstr);
+	unsigned long len = __ddcPrint_str_len(cstr);
+	for (int i = 0; i < len; i++)
+	{
+		switch (cstr[i])
+		{
+			case '%':
+			{
+				switch (cstr[i+1])
+				{
+					case 'f':
+						ddPrint_float(va_arg(ap, double));
+						i++;
+						break;
+					case 'd':
+						ddPrint_int(va_arg(ap, long));
+						i++;
+						break;
+					case 'c':
+						ddPrint_char(va_arg(ap, long));
+						i++;
+						break;
+					case 's':
+						ddPrint_cstring(va_arg(ap, char*));
+						i++;
+						break;
+				}
+				break;
+			}
+			default: ddPrint_char(cstr[i]); break;
+				
+		}
+	}
+	ddPrint_nl();
 	va_end(ap);
 }
 
