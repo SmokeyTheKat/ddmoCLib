@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 #define __DSOCKET_BUFFER_SIZE 1024
 
@@ -28,7 +29,7 @@ struct dsocketClient
 	int dscr;
 	int port;
 	struct sockaddr_in server;
-	ddString addr;
+	char* addr;
 };
 
 struct dsocketServer
@@ -88,14 +89,14 @@ int dsocketServer_receive(struct dsocketServer sck, int client, char* buffer, lo
 struct dsocketClient make_dsocketClient(char* addr, int port)
 {
 	struct dsocketClient output;
-	output.addr = make_ddString(addr);
+	output.addr = addr;
 	output.port = port;
 	return output;
 }
 
 void raze_dsocketClient(struct dsocketClient* sck)
 {
-	raze_ddString(&(sck->addr));
+	//raze_ddString(&(sck->addr));
 }
 
 int dsocketClient_connect(struct dsocketClient* sck)
@@ -104,7 +105,7 @@ int dsocketClient_connect(struct dsocketClient* sck)
 	if (sck->dscr == -1) return 1;
 	sck->server.sin_family = AF_INET;
 	sck->server.sin_port = htons(sck->port);
-	if (inet_pton(AF_INET, sck->addr.cstr, &sck->server.sin_addr) <= 0) return 1;
+	if (inet_pton(AF_INET, sck->addr, &sck->server.sin_addr) <= 0) return 1;
 	return connect(sck->dscr, (struct sockaddr*)&sck->server, sizeof(sck->server));
 }
 int dsocketClient_send(struct dsocketClient sck, const char* data, long length)
