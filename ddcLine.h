@@ -1,12 +1,11 @@
 #ifndef __ddcLine__
 #define __ddcLine__
 
-#include <ddcCursor.h>
-#include <ddcString.h>
-#include <ddcMath.h>
-#include <ddcVec.h>
-#include <ddcPrint.h>
-#include <ddcCharSets.h>
+#include "ddcString.h"
+#include "ddcMath.h"
+#include "ddcVec.h"
+#include "ddcPrint.h"
+#include "ddcCharSets.h"
 
 #include <stdio.h>
 
@@ -59,7 +58,7 @@ void draw_thick_line(ddLine dl, const char* ch)
 	int po[2]           = { dl.p1.x, dl.p1.y };
 	int i               = 0;
 	cursor_move_to(po[0], po[1]);
-	cursor_write_cstring(ch);
+	ddPrints(ch);
 	switch (i < td)
 	{
 		case 1:
@@ -70,7 +69,7 @@ void draw_thick_line(ddLine dl, const char* ch)
 				c[v] += ci[v];
 				po[v] += d[v];
 				cursor_move_to(po[0], po[1]);
-				cursor_write_cstring(ch);
+				ddPrints(ch);
 				i++;
 			} while (i < td);
 		}
@@ -87,7 +86,7 @@ void draw_thin_line(ddLine dl, const char* ch)
 	int po[2]           = { dl.p1.x, dl.p1.y };
 	int i               = 0;
 	cursor_move_to(po[0], po[1]);
-	cursor_write_cstring(ch);
+	ddPrints(ch);
 	switch (i < td)
 	{
 		case 1:
@@ -103,7 +102,7 @@ void draw_thin_line(ddLine dl, const char* ch)
 				po[!v] += z*d[!v];
 
 				cursor_move_to(po[0], po[1]);
-				cursor_write_cstring(ch);
+				ddPrints(ch);
 				i++;
 			} while (i < td);
 		}
@@ -127,7 +126,7 @@ void dl2h(ddLine dl, const char* ch)
 	{
 		i++;
 		cursor_move_to(x, y);
-		cursor_write_cstring(ch);
+		ddPrints(ch);
 		if (D > 0)
 		{
 			x += xi;
@@ -154,7 +153,7 @@ void dl2l(ddLine dl, const char* ch)
 	{
 		i++;
 		cursor_move_to(x, y);
-		cursor_write_cstring(ch);
+		ddPrints(ch);
 		if (D > 0)
 		{
 			y += yi;
