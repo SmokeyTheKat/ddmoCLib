@@ -30,6 +30,7 @@ ddString make_ddString_length(const char* _c, unsigned long _l);
 ddString make_ddString_capacity(const char* _c, unsigned long _cap);
 ddString make_auto_ddString(const char* _c);
 ddString make_constant_ddString(const char* _c);
+ddString make_constant_ddString_length(const char* _c, unsigned long _l);
 const ddString make_full_constant_ddString(const char* _c);
 ddString make_empty_ddString();
 ddString make_multi_ddString(const ddString _c, unsigned long _n);
@@ -491,6 +492,20 @@ void remake_ddString(ddString* _ds, const char* _c)
 {
 	raze_ddString(_ds);
 	*_ds = make_ddString(_c);
+}
+ddString make_constant_ddString_length(const char* _c, unsigned long _l)
+{
+	ddString _o;
+	_o.length = _l;
+	_o.capacity = _l + __BYINC;
+
+	_o.cstr = (char*)_c;
+	
+	_o.status = DOS_ACTIVE;
+	_o.aDelete = DOD_MANUAL;
+	_o.type = DDSTRING_CONSTANT;
+
+	return _o;
 }
 ddString make_constant_ddString(const char* _c)
 {
