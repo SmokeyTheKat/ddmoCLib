@@ -8,6 +8,7 @@ long ddMath_factorial(long n);
 double ddMath_sqrt(double n);
 double ddMath_sin(double n);
 double ddMath_map(double _v, double _l1, double _h1, double _l2, double _h2);
+float ddMath_mapf(float _v, float _l1, float _h1, float _l2, float _h2);
 
 /*
 double ddsin(double n)
@@ -20,6 +21,10 @@ double ddsin(double n)
 
 
 double ddMath_map(double _v, double _l1, double _h1, double _l2, double _h2)
+{
+	return (_v-_l1) * ((_h2-_l2)/(_h1-_l1)) + _l2;
+}
+float ddMath_mapf(float _v, float _l1, float _h1, float _l2, float _h2)
 {
 	return (_v-_l1) * ((_h2-_l2)/(_h1-_l1)) + _l2;
 }
