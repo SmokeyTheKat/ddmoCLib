@@ -19,6 +19,8 @@ void ddErrorf(const char* _ch, ...);
 
 void draw_line(int x1, int y1, int x2, int y2, const char* chr);
 void draw_line_half(int x1, int y1, int x2, int y2, const char* chr);
+void draw_rect(int x1, int y1, int x2, int y2, const char* chr);
+void draw_rect_outline(int x1, int y1, int x2, int y2, const char* chr);
 
 int cursor_get_width(void);
 int cursor_get_height(void);
@@ -358,6 +360,56 @@ void draw_line(int x1, int y1, int x2, int y2, const char* chr)
 	cursor_move_to(x2, y2);
 	ddPrints(chr);
 	draw_line_half(x1, y1, x2, y2, chr);
+}
+
+void draw_rect(int x1, int y1, int x2, int y2, const char* chr)
+{
+	for (int y = y1; y <= y2; y++)
+	{
+		cursor_move_to(x1, y);
+		for (int x = x1; x <= x2; x++)
+			ddPrints(chr);
+	}
+}
+void draw_rect_border(int x1, int y1, int x2, int y2, const char* pfx)
+{
+	ddString vb = make_format_ddString("%s\x1b[38;2;0;0;0m%s", pfx, "─");
+	ddString hb = make_format_ddString("%s\x1b[38;2;0;0;0m%s", pfx, "│");
+
+	draw_line(x1, y1, x2, y1, vb.cstr);
+	draw_line(x1, y2, x2, y2, vb.cstr);
+
+	draw_line(x1, y1, x1, y2, hb.cstr);
+	draw_line(x2, y1, x2, y2, hb.cstr);
+
+	cursor_move_to(x1, y1); ddPrintf("%s\x1b[38;2;0;0;0m", "┌");
+	cursor_move_to(x2, y1); ddPrintf("%s\x1b[38;2;0;0;0m", "┐");
+	cursor_move_to(x1, y2); ddPrintf("%s\x1b[38;2;0;0;0m", "└");
+	cursor_move_to(x2, y2); ddPrintf("%s\x1b[38;2;0;0;0m", "┘");
+
+	raze_ddString(&vb);
+	raze_ddString(&hb);
+}
+void draw_rect_outline(int x1, int y1, int x2, int y2, const char* chr)
+{
+	cursor_move_to(x1, y1);
+	for (int x = x1; x <= x2; x++)
+		ddPrints(chr);
+
+	cursor_move_to(x1, y2);
+	for (int x = x1; x <= x2; x++)
+		ddPrints(chr);
+
+	for (int y = y1; y <= y2; y++)
+	{
+		cursor_move_to(x1, y);
+		ddPrints(chr);
+	}
+	for (int y = y1; y <= y2; y++)
+	{
+		cursor_move_to(x2, y);
+		ddPrints(chr);
+	}
 }
 
 int cursor_get_height(void)
