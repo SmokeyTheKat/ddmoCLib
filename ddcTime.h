@@ -8,7 +8,7 @@
 void ddTimer_start(void);
 double ddTimer_stop(void);
 double ddTimer_get_time(void);
-bool ddTimer_is_past(double _v);
+char ddTimer_is_past(double _v);
 
 static clock_t __dt_begin;
 static clock_t __dt_end;
@@ -26,7 +26,7 @@ double ddTimer_get_time(void)
 {
 	return ((double)(clock() - __dt_begin) / CLOCKS_PER_SEC);
 }
-bool ddTimer_is_past(double _v)
+char ddTimer_is_past(double _v)
 {
 	return (_v < ((double)(clock() - __dt_begin) / CLOCKS_PER_SEC));
 }
