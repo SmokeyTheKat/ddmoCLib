@@ -17,6 +17,9 @@ void ddPrint_nl(void);
 void ddError(const char* _ch);
 void ddErrorf(const char* _ch, ...);
 
+void draw_line(int x1, int y1, int x2, int y2, const char* chr);
+void draw_line_half(int x1, int y1, int x2, int y2, const char* chr);
+
 int cursor_get_width(void);
 int cursor_get_height(void);
 void cursor_move(int x, int y);
@@ -333,6 +336,28 @@ void ddErrorf(const char* cstr, ...)
 	}
 	ddPrint_nl();
 	va_end(ap);
+}
+
+void draw_line_half(int x1, int y1, int x2, int y2, const char* chr)
+{
+	if (!(x1 == x2 && y1 == y2))
+	{
+		int xm = (x1+x2)/2;
+		int ym = (y1+y2)/2;
+		if ((xm == x1 && ym == y1) || (xm == x2) && ym == y2) return;
+		cursor_move_to(xm, ym);
+		ddPrints(chr);
+		draw_line_half(xm, ym, x2, y2, chr);
+		draw_line_half(x1, y1, xm, ym, chr);
+	}
+}
+void draw_line(int x1, int y1, int x2, int y2, const char* chr)
+{
+	cursor_move_to(x1, y1);
+	ddPrints(chr);
+	cursor_move_to(x2, y2);
+	ddPrints(chr);
+	draw_line_half(x1, y1, x2, y2, chr);
 }
 
 int cursor_get_height(void)
