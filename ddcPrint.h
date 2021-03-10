@@ -371,6 +371,7 @@ void draw_rect(int x1, int y1, int x2, int y2, const char* chr)
 			ddPrints(chr);
 	}
 }
+/*
 void draw_rect_border(int x1, int y1, int x2, int y2, const char* pfx)
 {
 	ddString vb = make_format_ddString("%s\x1b[38;2;0;0;0m%s", pfx, "─");
@@ -390,6 +391,7 @@ void draw_rect_border(int x1, int y1, int x2, int y2, const char* pfx)
 	raze_ddString(&vb);
 	raze_ddString(&hb);
 }
+*/
 void draw_rect_outline(int x1, int y1, int x2, int y2, const char* chr)
 {
 	cursor_move_to(x1, y1);
