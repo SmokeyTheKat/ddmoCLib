@@ -1,30 +1,18 @@
-/*
-#include "./ddcArgs.h"
-#include "./ddcCharSets.h"
-#include "./ddcPrint.h"
-#include "./ddcGArray.h"
-#include "./ddcMem.h"
+#include "./ddcColors.h"
 #include "./ddcString.h"
-#include "./ddcVec.h"
-#include "./ddcBits.h"
-#include "./ddcNLoops.h"
-#include "./ddcTime.h"
-#include "./ddcLine.h"
-*/
-#include "./ddcSocket.h"
+#include "./ddcPrint.h"
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 int main(int argc, char** argv)
 {
-	struct dsocketServer srv = make_dsocketServer(8080);
-	dsocketServer_bind(&srv);
-	dsocketServer_start_listen(&srv);
-	int client = dsocketServer_listen(&srv);
-	char buffer[1024] = {0};
-	dsocketServer_receive(srv, client, buffer, 1024);
-	printf("recv: %s\n", buffer);
-	dsocketServer_send(srv, client, "OMG", 5);
-	
+	struct color c = HSVtoRGB(0, 100, 100);
+	for (int i = 0; i < 360; i++)
+	{
+		c = HSVtoRGB(i, 100, 100);
+		ddPrintf("[%d, %d, %d]: \x1b[38;2;%d;%d;%dm#\n", (int)c.r, (int)c.g, (int)c.b, (int)c.r, (int)c.g, (int)c.b);
+
+	}
 	return 0;
 }

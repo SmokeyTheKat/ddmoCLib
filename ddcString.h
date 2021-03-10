@@ -1,6 +1,7 @@
 #ifndef __ddcString__
 #define __ddcString__
 
+#include <malloc.h>
 #include <stdarg.h>
 
 #ifndef __ddcLib_DStatus__
