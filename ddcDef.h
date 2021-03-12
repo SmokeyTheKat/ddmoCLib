@@ -16,7 +16,6 @@ enum DODelete { DOD_MANUAL=0, DOD_AUTO };
 void __VOID__(void) { return; };
 void __VOID_INT__(int __p_none) { return; };
 
-//ints
 typedef signed char             int8t;
 typedef signed short 		int16t;
 typedef signed int	        int32t;
@@ -27,31 +26,13 @@ typedef signed int	        uint32t;
 typedef signed long long int    uint64t;
 typedef signed long long int 	sizet;
 
-
-#ifndef lambda
-	#define lambda(lambda$_ret, lambda$_args, lambda$_body)\
-	({\
-	lambda$_ret lambda$__anon$ lambda$_args\
-	lambda$_body\
-	&amp;lambda$__anon$;\
-	})
-	#endif
-/*
-#ifndef run
-	int __RUN_ERROR = 0;
-	#define run __RUN_ERROR = -1;
-	#define end(x) __EXIT_JMP_##x:if(__RUN_ERROR==x)
-	#define leave(x) __RUN_ERROR=x;goto __EXIT_JMP_##x;
-	#endif
-*/
-
-#ifndef make(t,s)
+#ifndef make
 	#define make(t,s) ((t*)malloc(s*sizeof(t)))
 	#endif
-#ifndef makea(t,s)
+#ifndef makea
 	#define makea(t,s) ((t*)malloc(s*sizeof(t)))
 	#endif
-#ifndef makep(t)
+#ifndef makep
 	#define makep(t) ((t*)malloc(sizeof(t)))
 	#endif
 #ifndef raze

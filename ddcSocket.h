@@ -61,6 +61,7 @@ int dsocketServer_bind(struct dsocketServer* sck)
 	sck->server.sin_port = htons(sck->port);
 	if (bind(sck->dscr, (struct sockaddr*)&sck->server, sizeof(sck->server)) < 0)
 		return 1;
+	return 0;
 }
 int dsocketServer_start_listen(struct dsocketServer* sck)
 {

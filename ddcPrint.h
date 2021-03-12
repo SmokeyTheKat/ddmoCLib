@@ -78,6 +78,7 @@ static unsigned long  __ddcPrint_int_get_length(long num)
 		return 11;
 	else if (num < 1000000000000)
 		return 12;
+	return 13;
 }
 
 static long __ddcPrint_floatTCount(long n, long c)
