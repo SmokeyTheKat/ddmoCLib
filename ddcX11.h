@@ -1,5 +1,5 @@
-#ifndef __ddcString__
-#define __ddcString__
+#ifndef __ddcX11__
+#define __ddcX11__
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
