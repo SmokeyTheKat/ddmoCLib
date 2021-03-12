@@ -4,6 +4,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+#define CRGB(r,g,b) "\x1b[38;2;" #r ";" #g ";" #b "m"
+
 #define CWHITE "\x1b[38;2;255;255;255m"
 #define CBLACK "\x1b[38;2;0;0;0m"
 #define CGREEN "\x1b[38;2;0;255;0m"
