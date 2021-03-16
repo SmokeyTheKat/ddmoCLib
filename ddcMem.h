@@ -3,7 +3,7 @@
 
 void mem_set(void* dest, int value, long length);
 void mem_copy(void* dest, const void* src, long length);
-void mem_copy_setp(void* dest, const void* src, long step, long length);
+void mem_copy_step(void* dest, const void* src, long step, long length);
 void mem_copy_offset(void* dest, const void* src, long destOffset, long srcOffset, long length);
 void mem_copy_offset_step(void* dest, const void* src, long destOffset, long srcOffset, long step, long length);
 void mem_copy_step_offset(void* dest, const void* src, long destOffset, long srcOffset, long step, long stepOffset, long length);
@@ -29,15 +29,15 @@ void mem_copy(void* dest, const void* src, long length)
 	}
 }
 
-void mem_copy_setp(void* dest, const void* src, long step, long length)
+void mem_copy_step(void* dest, const void* src, long step, long length)
 {
 	char* cdest = (char*)dest;
 	const char* csrc = (const char*)src;
-	for (long i = 0; i < length; i+=step)
+	for (long i = 0; i < length; i++)
 	{
 		*cdest = *csrc;
-		cdest++;
-		csrc++;
+		cdest+=step;
+		csrc+=step;
 	}
 }
 

@@ -8,6 +8,7 @@
 
 #define CWHITE "\x1b[38;2;255;255;255m"
 #define CBLACK "\x1b[38;2;0;0;0m"
+#define CRED "\x1b[38;2;255;0;0m"
 #define CGREEN "\x1b[38;2;0;255;0m"
 #define CBLUE "\x1b[38;2;0;0;255m"
 #define CYELLOW "\x1b[38;2;255;255;0m"

@@ -339,6 +339,7 @@ void ddErrorf(const char* cstr, ...)
 	}
 	ddPrint_nl();
 	va_end(ap);
+	exit(1);
 }
 
 void draw_line_half(int x1, int y1, int x2, int y2, const char* chr)
@@ -430,7 +431,10 @@ int cursor_get_width(void)
 
 void cursor_move(int x, int y)
 {
-	ddPrintf("\x1b[%dB\x1b[%dC", y, x);
+	if (y != 0)
+		ddPrintf("\x1b[%dB", y);
+	if (x != 0)
+		ddPrintf("\x1b[%dC", x);
 }
 void cursor_move_to(int x, int y)
 {
