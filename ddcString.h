@@ -37,6 +37,7 @@ ddString make_empty_ddString();
 ddString make_multi_ddString(const ddString _c, unsigned long _n);
 ddString make_multi_ddString_cstring(const char* _c, unsigned long _n);
 ddString make_ddString_from_int(int _v);
+ddString make_ddString_buf_from_int(char* _c, unsigned long _l, int _v);
 ddString make_ddString_from_float(float _f);
 void remake_ddString(ddString* _ds, const char* _c);
 void raze_ddString(ddString* _d);
@@ -68,6 +69,7 @@ void ddString_close(ddString _d);
 
 static int __floatTdsCount(int number, int count);
 void cstring_get_length(const char* _c, unsigned long* _l);
+unsigned long cstring_length(const char* _c);
 void cstring_copy(char* _d, const char* _s, unsigned long _len);
 void cstring_copy_offset(char* _d, const char* _s, unsigned long _do, unsigned long _so, unsigned long _l);
 bool cstring_compare(const char* _d, const char* _s);
@@ -92,6 +94,12 @@ struct ddString
 
 
 
+unsigned long cstring_length(const char* _c)
+{
+	unsigned long _o = 0;
+	for (; _c[_o] != '\0'; _o++);
+	return _o;
+}
 void cstring_get_length(const char* _c, unsigned long* _l)
 {
     for (*_l = 0; _c[*_l] != '\0'; (*_l)++);
@@ -351,14 +359,51 @@ void ddString_push_char_front(ddString* _d, const char _c)
 {
     if (_d->capacity < _d->length + 1)
         ddString_resize(_d, _d->length + 1 + __BYINC);
-    char* _t = malloc(_d->length + 1);
-    _t[0] = _c;
-    cstring_copy_offset(_t, _d->cstr, 1, 0, _d->length);
-    raze_ddString(_d);
+
+    for (unsigned long i = _d->length; i >= 1; i--)
+    {
+        _d->cstr[i] = _d->cstr[i-1];
+    }
+
+    _d->cstr[0] = _c;
+
     _d->length += 1;
-    _d->cstr = _t;
     _d->status = DOS_ACTIVE;
     ddString_close(*_d);
+}
+
+ddString make_ddString_buf_from_int(char* _c, unsigned long _l, int _v)
+{
+    ddString _o;
+    _o.cstr = _c;
+    _o.length = 0;
+    _o.capacity = _l+10;
+    if (_v == 0)
+    {
+        _c[0] = '0';
+        _c[1] = 0;
+	return _o;
+    }
+    char sign;
+    if (_v < 0) 
+    {
+        sign = '-';
+        _v *= -1;
+    }
+    while (_v)
+    {       
+        unsigned long x = _v % 10;
+        _v /= 10; 
+        ddString_push_char_front(&_o, (char)('0' + x));
+    }
+    if (_o.length == 0)
+    {
+        _c[0] = '0';
+        _c[1] = 0;
+	return _o;
+    }
+    if (sign == '-') ddString_push_char_front(&_o, sign);
+    return _o;
 }
 
 ddString make_ddString_from_int(int _v)
