@@ -31,7 +31,10 @@ void ddXE_set_color(int r, int g, int b)
 {
 	XSetForeground(d, gc, XRGB(r, g, b));
 }
-
+void ddXE_flush(void)
+{
+	XFlush(d);
+}
 void ddXE_set_pixel(int x, int y)
 {
 	XDrawPoint(d, w, gc, x, y);

@@ -24,6 +24,15 @@ struct color
 	};
 };
 
+struct color make_color(int r, int g, int b)
+{
+	struct color output;
+	output.r = r;
+	output.g = g;
+	output.b = b;
+	return output;
+}
+
 struct color HSVtoRGB(float h, float S,float V)
 {
 }
