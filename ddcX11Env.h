@@ -4,6 +4,18 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 
+struct ddXE_settings
+{
+	void(*start)(void);
+	void(*draw)(void);
+	void(*keypress)(char);
+	void(*mousedown)(int, int, int);
+	void(*mouseup)(int, int, int);
+	void(*mousemove)(int, int);
+	void(*mousedownmove)(int, int, int);
+	char* running;
+};
+
 static Display* d;
 static Window w;
 static GC gc;
@@ -15,6 +27,11 @@ unsigned long XRGB(int r, int g, int b)
     return b + (g<<8) + (r<<16);
 }
 
+void ddXE_get_mouse_pos(int* x, int* y)
+{
+	void* v;
+	XQueryPointer(d, w, v, v, v, v, x, y, v);
+}
 int ddXE_get_width(void)
 {
 	XWindowAttributes xwa;
@@ -31,6 +48,10 @@ void ddXE_set_color(int r, int g, int b)
 {
 	XSetForeground(d, gc, XRGB(r, g, b));
 }
+void ddXE_clear(void)
+{
+	XClearWindow(d, w);
+}
 void ddXE_flush(void)
 {
 	XFlush(d);
@@ -38,6 +59,10 @@ void ddXE_flush(void)
 void ddXE_set_pixel(int x, int y)
 {
 	XDrawPoint(d, w, gc, x, y);
+}
+void ddXE_draw_dot(int x, int y, int size)
+{
+	XFillArc(d, w, gc, x, y, size, size, 0, 360*64);
 }
 void ddXE_draw_line(int x1, int y1, int x2, int y2)
 {
@@ -56,7 +81,7 @@ void ddXE_draw_bitmap(int x, int y, char* filename)
 	XCopyArea(d, pm, w, gc, 0, 0, width, height, x, y);
 }
 
-int ddXE_start(void(*fdraw)(void), void(*fkeypress)(char), void(*fmouseclick)(int,int,int), char* running)
+int ddXE_start(const struct ddXE_settings set)
 {
 	d = XOpenDisplay(NULL);
 	if (d == NULL)
@@ -67,36 +92,79 @@ int ddXE_start(void(*fdraw)(void), void(*fkeypress)(char), void(*fmouseclick)(in
 	w = XCreateSimpleWindow(d, RootWindow(d, s), 10, 10, 100, 100, 1,
 					BlackPixel(d, s), WhitePixel(d, s));
 	gc = DefaultGC(d, s);
-	XSelectInput(d, w, ExposureMask | KeyPressMask | ButtonPressMask | ButtonReleaseMask);
+	XSelectInput(d, w, ExposureMask | KeyPressMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask);
 	XMapWindow(d, w);
 
-	while (1)
+	bool lstarted = false;
+	int cmousebut = -1;
+	int cmousedown = 0;
+
+	while (*set.running)
 	{
-		if (!(*running)) break;
 		XNextEvent(d, &e);
+		if (!lstarted)
+		{
+			if (set.start) set.start();
+			lstarted = true;
+		}
 		switch (e.type)
 		{
 			case Expose:
-				fdraw();
+				if (set.draw) set.draw();
 				break;
 			case KeyPress:
-				fkeypress(XLookupKeysym(&(e.xkey), 0));
+				if (set.keypress) set.keypress(XLookupKeysym(&(e.xkey), 0));
 				break;
+			case MotionNotify:
+			{
+				if (cmousedown)
+				{
+					if (set.mousedownmove) set.mousedownmove(cmousebut, e.xbutton.x, e.xbutton.y);
+				}
+				else
+				{
+					if (set.mousemove) set.mousemove(e.xbutton.x, e.xbutton.y);
+				}
+			} break;
 			case ButtonPress:
 			{
+				cmousedown = 1;
 				switch (e.xbutton.button)
 				{
 					case Button1:
-						fmouseclick(1, e.xbutton.x, e.xbutton.y);
+						cmousebut = 1;
+						if (set.mousedown) set.mousedown(1, e.xbutton.x, e.xbutton.y);
 						break;
 					case Button2:
-						fmouseclick(2, e.xbutton.x, e.xbutton.y);
+						cmousebut = 2;
+						if (set.mousedown) set.mousedown(2, e.xbutton.x, e.xbutton.y);
 						break;
 					case Button3:
-						fmouseclick(3, e.xbutton.x, e.xbutton.y);
+						cmousebut = 3;
+						if (set.mousedown) set.mousedown(3, e.xbutton.x, e.xbutton.y);
 						break;
 					default:
-						fmouseclick(-1, e.xbutton.x, e.xbutton.y);
+						cmousebut = -1;
+						if (set.mousedown) set.mousedown(-1, e.xbutton.x, e.xbutton.y);
+						break;
+				}
+			} break;
+			case ButtonRelease:
+			{
+				cmousedown = 0;
+				switch (e.xbutton.button)
+				{
+					case Button1:
+						if (set.mouseup) set.mouseup(1, e.xbutton.x, e.xbutton.y);
+						break;
+					case Button2:
+						if (set.mouseup) set.mouseup(2, e.xbutton.x, e.xbutton.y);
+						break;
+					case Button3:
+						if (set.mouseup) set.mouseup(3, e.xbutton.x, e.xbutton.y);
+						break;
+					default:
+						if (set.mouseup) set.mouseup(-1, e.xbutton.x, e.xbutton.y);
 						break;
 				}
 			} break;

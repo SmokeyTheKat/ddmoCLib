@@ -83,11 +83,11 @@ static unsigned long  __ddcPrint_int_get_length(long num)
 
 static long __ddcPrint_floatTCount(long n, long c)
 {
-    int _o = 1;
-    while(c-- > 0)
-        _o *= n;
+	int _o = 1;
+	while(c-- > 0)
+		_o *= n;
 
-    return _o;
+	return _o;
 }
 
 static char* __ddcPrint_float_to_cstring(float flt, unsigned long* output_len)
@@ -196,7 +196,7 @@ static unsigned long __ddcPrint_str_len(const char* cstr)
 void ddPrint(const void* vptr, const unsigned long length)
 {
 #if __x86_64__
-	__asm__		(".intel_syntax;"
+	__asm__        (".intel_syntax;"
 			 "mov %%rsi, %0;"
 			 "mov %%rdx, %1;"
 			 "mov %%rax, 1;"
@@ -207,7 +207,7 @@ void ddPrint(const void* vptr, const unsigned long length)
 			 :"r"(vptr), "r"(length)
 			 :"rsi", "rdx");
 #else
-	__asm__		(".intel_syntax;"
+	__asm__        (".intel_syntax;"
 			 "mov %%esi, %0;"
 			 "mov %%edx, %1;"
 			 "mov %%eax, 1;"
@@ -298,6 +298,7 @@ void ddError(const char* cstr)
 	ddPrints("\x1b[38;2;255;255;255m[\x1b[38;2;255;0;0mERROR\x1b[38;2;255;255;255m] ");
 	ddPrints(cstr);
 	ddPrint_nl();
+	exit(1);
 }
 
 void ddErrorf(const char* cstr, ...)
