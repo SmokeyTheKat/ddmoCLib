@@ -8,7 +8,8 @@ struct ddXE_settings
 {
 	void(*start)(void);
 	void(*draw)(void);
-	void(*keypress)(char);
+	void(*keypress)(unsigned char);
+	void(*keyrelease)(unsigned char);
 	void(*mousedown)(int, int, int);
 	void(*mouseup)(int, int, int);
 	void(*mousemove)(int, int);
@@ -60,9 +61,13 @@ void ddXE_set_pixel(int x, int y)
 {
 	XDrawPoint(d, w, gc, x, y);
 }
+void ddXE_draw_rect(int x1, int y1, int x2, int y2)
+{
+	XFillRectangle(d, w, gc, x1, y1, x2, y2);
+}
 void ddXE_draw_dot(int x, int y, int size)
 {
-	XFillArc(d, w, gc, x, y, size, size, 0, 360*64);
+	XFillArc(d, w, gc, x-(size/2), y-(size/2), size, size, 0, 360*64);
 }
 void ddXE_draw_line(int x1, int y1, int x2, int y2)
 {
@@ -92,7 +97,7 @@ int ddXE_start(const struct ddXE_settings set)
 	w = XCreateSimpleWindow(d, RootWindow(d, s), 10, 10, 100, 100, 1,
 					BlackPixel(d, s), WhitePixel(d, s));
 	gc = DefaultGC(d, s);
-	XSelectInput(d, w, ExposureMask | KeyPressMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask);
+	XSelectInput(d, w, ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask);
 	XMapWindow(d, w);
 
 	bool lstarted = false;
@@ -114,6 +119,9 @@ int ddXE_start(const struct ddXE_settings set)
 				break;
 			case KeyPress:
 				if (set.keypress) set.keypress(XLookupKeysym(&(e.xkey), 0));
+				break;
+			case KeyRelease:
+				if (set.keyrelease) set.keyrelease(XLookupKeysym(&(e.xkey), 0));
 				break;
 			case MotionNotify:
 			{
