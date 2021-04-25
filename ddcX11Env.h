@@ -14,6 +14,10 @@ struct ddXE_settings
 	void(*mouseup)(int, int, int);
 	void(*mousemove)(int, int);
 	void(*mousedownmove)(int, int, int);
+	char bgcolor[3];
+	char fgcolor[3];
+	char autoflush;
+	char nodb;
 	char* running;
 };
 
@@ -21,7 +25,9 @@ static Display* d;
 static Window w;
 static GC gc;
 static XEvent e;
+static Pixmap db;
 static int s;
+struct ddXE_settings set;
 
 unsigned long XRGB(int r, int g, int b)
 {
@@ -32,6 +38,12 @@ void ddXE_get_mouse_pos(int* x, int* y)
 {
 	void* v;
 	XQueryPointer(d, w, v, v, v, v, x, y, v);
+}
+int ddXE_get_depth(void)
+{
+	XWindowAttributes xwa;
+	XGetWindowAttributes(d, w, &xwa);
+	return xwa.depth;
 }
 int ddXE_get_width(void)
 {
@@ -51,31 +63,33 @@ void ddXE_set_color(int r, int g, int b)
 }
 void ddXE_clear(void)
 {
-	XClearWindow(d, w);
+	ddXE_set_color(set.bgcolor[0],set.bgcolor[1],set.bgcolor[2]);
+	XFillRectangle(d, db, gc, 0, 0, ddXE_get_width(), ddXE_get_height());
 }
 void ddXE_flush(void)
 {
-	XFlush(d);
+	if (set.nodb) XFlush(d);
+	else XCopyArea(d, db, w, gc, 0, 0, ddXE_get_width(), ddXE_get_height(), 0, 0);
 }
 void ddXE_set_pixel(int x, int y)
 {
-	XDrawPoint(d, w, gc, x, y);
+	XDrawPoint(d, db, gc, x, y);
 }
 void ddXE_draw_rect(int x1, int y1, int x2, int y2)
 {
-	XFillRectangle(d, w, gc, x1, y1, x2, y2);
+	XFillRectangle(d, db, gc, x1, y1, x2, y2);
 }
 void ddXE_draw_dot(int x, int y, int size)
 {
-	XFillArc(d, w, gc, x-(size/2), y-(size/2), size, size, 0, 360*64);
+	XFillArc(d, db, gc, x-(size/2), y-(size/2), size, size, 0, 360*64);
 }
 void ddXE_draw_line(int x1, int y1, int x2, int y2)
 {
-	XDrawLine(d, w, gc, x1, y1, x2, y2);
+	XDrawLine(d, db, gc, x1, y1, x2, y2);
 }
 void ddXE_draw_text(int x, int y, char* str, int length)
 {
-	XDrawString(d, w, gc, x, y, str, length);
+	XDrawString(d, db, gc, x, y, str, length);
 }
 void ddXE_draw_bitmap(int x, int y, char* filename)
 {
@@ -86,16 +100,19 @@ void ddXE_draw_bitmap(int x, int y, char* filename)
 	XCopyArea(d, pm, w, gc, 0, 0, width, height, x, y);
 }
 
-int ddXE_start(const struct ddXE_settings set)
+int ddXE_start(const struct ddXE_settings _set)
 {
+	set = _set;
 	d = XOpenDisplay(NULL);
 	if (d == NULL)
 	{
 		return 1;
 	}
 	s = DefaultScreen(d);
+	XColor fgc = { set.fgcolor[0], set.fgcolor[1], set.fgcolor[2] };
+	XColor bgc = { set.bgcolor[0], set.bgcolor[1], set.bgcolor[2] };
 	w = XCreateSimpleWindow(d, RootWindow(d, s), 10, 10, 100, 100, 1,
-					BlackPixel(d, s), WhitePixel(d, s));
+					WhitePixel(d, s), BlackPixel(d, s));
 	gc = DefaultGC(d, s);
 	XSelectInput(d, w, ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask);
 	XMapWindow(d, w);
@@ -106,9 +123,15 @@ int ddXE_start(const struct ddXE_settings set)
 
 	while (*set.running)
 	{
+		if (lstarted && set.autoflush) ddXE_flush();
 		XNextEvent(d, &e);
 		if (!lstarted)
 		{
+			if (set.nodb)
+				db = w;
+			else
+				db = XCreatePixmap(d, w, ddXE_get_width(), ddXE_get_height(), ddXE_get_depth());
+			ddXE_clear();
 			if (set.start) set.start();
 			lstarted = true;
 		}
