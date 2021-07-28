@@ -20,7 +20,7 @@ struct ddXE_settings
 	char nodb;
 	char* running;
 	int width;
-	int heigth;
+	int height;
 };
 
 static Display* d;
@@ -113,7 +113,7 @@ int ddXE_start(const struct ddXE_settings _set)
 	s = DefaultScreen(d);
 	XColor fgc = { set.fgcolor[0], set.fgcolor[1], set.fgcolor[2] };
 	XColor bgc = { set.bgcolor[0], set.bgcolor[1], set.bgcolor[2] };
-	w = XCreateSimpleWindow(d, RootWindow(d, s), 100, 100, width, height, 1,
+	w = XCreateSimpleWindow(d, RootWindow(d, s), 100, 100, set.width, set.height, 1,
 					WhitePixel(d, s), BlackPixel(d, s));
 	gc = DefaultGC(d, s);
 	XSelectInput(d, w, ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask);
